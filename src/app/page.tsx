@@ -3,7 +3,10 @@ import {
   ArrowDown,
   ArrowUpRight,
   BedDouble,
+  CalendarDays,
+  Check,
   MapPin,
+  MessageCircle,
 } from "lucide-react";
 
 const residences = [
@@ -395,6 +398,235 @@ export default function Home() {
         </div>
       </section>
 
+      {/* DIRECT BOOKING */}
+      <section
+        id="book"
+        className="relative overflow-hidden border-t border-white/[0.07] bg-[var(--surface)]"
+      >
+        <div className="container-page py-28 sm:py-36">
+          <div className="grid gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+            <div>
+              <p className="eyebrow">Book Direct</p>
+
+              <h2 className="mt-6 max-w-xl text-4xl font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
+                Your stay.
+                <br />
+                <span className="text-white/40">
+                  Your way.
+                </span>
+              </h2>
+
+              <p className="mt-8 max-w-md text-sm leading-7 text-[var(--muted)] sm:text-base">
+                Tell us when you&apos;re coming and what you&apos;re looking
+                for. Our team will confirm availability and help you find
+                the right Vidan residence.
+              </p>
+
+              <div className="mt-10 space-y-5">
+                {[
+                  "Direct communication with our team",
+                  "Access to our Accra residences",
+                  "Rates confirmed before you arrive",
+                  "Personalised stay assistance",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="flex items-center gap-3 text-sm text-white/65"
+                  >
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[var(--gold)] text-[var(--gold)]">
+                      <Check size={11} />
+                    </span>
+
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-12 border-l border-[var(--gold)]/50 pl-5">
+                <p className="text-[9px] font-semibold tracking-[0.2em] text-[var(--gold)] uppercase">
+                  Coming to Accra in December?
+                </p>
+
+                <p className="mt-2 max-w-sm text-xs leading-6 text-white/45">
+                  Secure your preferred residence early. December stays are
+                  subject to availability.
+                </p>
+              </div>
+            </div>
+
+            {/* ENQUIRY PANEL */}
+            <div className="border border-white/10 bg-[var(--background)]">
+              <div className="border-b border-white/10 p-6 sm:p-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[9px] tracking-[0.2em] text-[var(--gold)] uppercase">
+                      Availability
+                    </p>
+
+                    <h3 className="mt-2 text-2xl font-light">
+                      Plan your stay
+                    </h3>
+                  </div>
+
+                  <CalendarDays
+                    size={22}
+                    className="text-white/25"
+                  />
+                </div>
+              </div>
+
+              <form
+                className="p-6 sm:p-8"
+                onSubmit={(event) => {
+                  event.preventDefault();
+
+                  const form = event.currentTarget;
+                  const data = new FormData(form);
+
+                  const arrival = data.get("arrival");
+                  const departure = data.get("departure");
+                  const guests = data.get("guests");
+                  const residence = data.get("residence");
+
+                  const message = [
+                    "Hello Vidan Luxury Apartments 👋",
+                    "",
+                    "I'd like to check availability.",
+                    "",
+                    `Residence: ${residence}`,
+                    `Arrival: ${arrival}`,
+                    `Departure: ${departure}`,
+                    `Guests: ${guests}`,
+                    "",
+                    "Please let me know what is available.",
+                  ].join("\n");
+
+                  window.open(
+                    `https://wa.me/233591581142?text=${encodeURIComponent(message)}`,
+                    "_blank"
+                  );
+                }}
+              >
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <label className="block">
+                    <span className="mb-2 block text-[9px] tracking-[0.16em] text-white/40 uppercase">
+                      Arrival
+                    </span>
+
+                    <input
+                      name="arrival"
+                      type="date"
+                      required
+                      className="h-14 w-full border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition focus:border-[var(--gold)]"
+                    />
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-2 block text-[9px] tracking-[0.16em] text-white/40 uppercase">
+                      Departure
+                    </span>
+
+                    <input
+                      name="departure"
+                      type="date"
+                      required
+                      className="h-14 w-full border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition focus:border-[var(--gold)]"
+                    />
+                  </label>
+                </div>
+
+                <div className="mt-6 grid gap-6 sm:grid-cols-2">
+                  <label className="block">
+                    <span className="mb-2 block text-[9px] tracking-[0.16em] text-white/40 uppercase">
+                      Guests
+                    </span>
+
+                    <select
+                      name="guests"
+                      defaultValue="2"
+                      className="h-14 w-full appearance-none border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition focus:border-[var(--gold)]"
+                    >
+                      <option value="1" className="bg-black">
+                        1 guest
+                      </option>
+                      <option value="2" className="bg-black">
+                        2 guests
+                      </option>
+                      <option value="3" className="bg-black">
+                        3 guests
+                      </option>
+                      <option value="4" className="bg-black">
+                        4 guests
+                      </option>
+                      <option value="5" className="bg-black">
+                        5+ guests
+                      </option>
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-2 block text-[9px] tracking-[0.16em] text-white/40 uppercase">
+                      Residence
+                    </span>
+
+                    <select
+                      name="residence"
+                      defaultValue="Any available residence"
+                      className="h-14 w-full appearance-none border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition focus:border-[var(--gold)]"
+                    >
+                      <option
+                        value="Any available residence"
+                        className="bg-black"
+                      >
+                        Any available
+                      </option>
+
+                      <option
+                        value="East Legon Residence"
+                        className="bg-black"
+                      >
+                        East Legon
+                      </option>
+
+                      <option
+                        value="Cantonments Residence"
+                        className="bg-black"
+                      >
+                        Cantonments
+                      </option>
+
+                      <option
+                        value="Spintex Residence"
+                        className="bg-black"
+                      >
+                        Spintex
+                      </option>
+                    </select>
+                  </label>
+                </div>
+
+                <button
+                  type="submit"
+                  className="group mt-8 flex h-16 w-full items-center justify-center gap-3 bg-[var(--gold)] text-[10px] font-semibold tracking-[0.2em] text-black uppercase transition hover:bg-[var(--gold-light)]"
+                >
+                  Check availability on WhatsApp
+
+                  <MessageCircle
+                    size={16}
+                    className="transition-transform group-hover:scale-110"
+                  />
+                </button>
+
+                <p className="mt-4 text-center text-[10px] leading-5 text-white/30">
+                  Your enquiry opens directly in WhatsApp. No payment is
+                  required at this stage.
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* EXPERIENCE */}
       <section
         id="experience"
@@ -544,6 +776,23 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* FLOATING WHATSAPP */}
+      <a
+        href="https://wa.me/233591581142?text=Hello%20Vidan%20Luxury%20Apartments%20%F0%9F%91%8B%20I%27d%20like%20to%20check%20availability."
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat with Vidan on WhatsApp"
+        className="group fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-full border border-white/10 bg-[#151513] px-4 py-3 shadow-2xl transition hover:border-[var(--gold)] sm:bottom-7 sm:right-7"
+      >
+        <span className="hidden text-[9px] font-semibold tracking-[0.16em] text-white uppercase sm:block">
+          Chat with Vidan
+        </span>
+
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--gold)] text-black transition group-hover:scale-105">
+          <MessageCircle size={18} />
+        </span>
+      </a>
+
     </main>
   );
 }
