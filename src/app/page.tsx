@@ -267,6 +267,156 @@ export default function Home() {
           </a>
         </div>
       </section>
+
+      {/* EXPERIENCE */}
+      <section
+        id="experience"
+        className="border-t border-white/[0.07] bg-[var(--surface)]"
+      >
+        <div className="container-page py-28 sm:py-36">
+          <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <p className="eyebrow">The Vidan Experience</p>
+
+              <h2 className="mt-6 max-w-xl text-4xl font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
+                Everything you need.
+                <br />
+                <span className="text-white/40">
+                  Nothing you don&apos;t.
+                </span>
+              </h2>
+
+              <p className="mt-8 max-w-lg text-sm leading-7 text-[var(--muted)] sm:text-base">
+                Come home to thoughtfully furnished spaces, modern comforts
+                and the freedom to settle into Accra on your own terms.
+              </p>
+
+              <div className="mt-10">
+                <a
+                  href="#book"
+                  className="group inline-flex items-center gap-3 text-[10px] font-semibold tracking-[0.2em] text-[var(--gold)] uppercase"
+                >
+                  Plan your stay
+
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--gold)] transition group-hover:bg-[var(--gold)] group-hover:text-black">
+                    <ArrowUpRight
+                      size={14}
+                      className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    />
+                  </span>
+                </a>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[5/4]">
+                <Image
+                  src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=90"
+                  alt="Elegant Vidan-style apartment interior"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              </div>
+
+              <div className="absolute -bottom-6 -left-4 hidden border border-white/10 bg-[var(--background)] p-6 sm:block lg:-left-8">
+                <p className="text-[9px] tracking-[0.2em] text-[var(--gold)] uppercase">
+                  Accra
+                </p>
+
+                <p className="mt-2 text-sm text-white/70">
+                  East Legon · Cantonments · Spintex
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* AMENITIES */}
+          <div className="mt-28 border-t border-white/10 pt-12 sm:mt-36">
+            <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="eyebrow">Included</p>
+
+                <h3 className="mt-3 text-2xl font-light tracking-[-0.02em] sm:text-3xl">
+                  Comfort, considered.
+                </h3>
+              </div>
+
+              <p className="max-w-xs text-xs leading-6 text-white/40">
+                The essentials for an effortless stay, wherever your plans
+                take you.
+              </p>
+            </div>
+
+            <div className="grid border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                {
+                  number: "01",
+                  title: "Fully Fitted Kitchens",
+                  description:
+                    "Settle in, cook at home and stay on your own schedule.",
+                },
+                {
+                  number: "02",
+                  title: "High-Speed Wi-Fi",
+                  description:
+                    "Stay connected whether you are working or unwinding.",
+                },
+                {
+                  number: "03",
+                  title: "24/7 Security",
+                  description:
+                    "Peace of mind throughout your stay in Accra.",
+                },
+                {
+                  number: "04",
+                  title: "Smart TV & DSTV",
+                  description:
+                    "Switch off and enjoy your favourite entertainment.",
+                },
+                {
+                  number: "05",
+                  title: "Private Parking",
+                  description:
+                    "Convenient parking available across the residences.",
+                },
+                {
+                  number: "06",
+                  title: "Prime Locations",
+                  description:
+                    "Close to restaurants, shopping, entertainment and more.",
+                },
+              ].map((amenity) => (
+                <div
+                  key={amenity.number}
+                  className="group border-b border-r border-white/10 p-7 transition hover:bg-white/[0.025] sm:p-9"
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="text-[9px] tracking-[0.18em] text-[var(--gold)]">
+                      {amenity.number}
+                    </span>
+
+                    <ArrowUpRight
+                      size={14}
+                      className="text-white/20 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--gold)]"
+                    />
+                  </div>
+
+                  <h4 className="mt-10 text-lg font-light text-white">
+                    {amenity.title}
+                  </h4>
+
+                  <p className="mt-3 max-w-xs text-xs leading-6 text-white/40">
+                    {amenity.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
