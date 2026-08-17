@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Vidan Luxury Apartments | Accra",
   description:
-    "Luxury short-let apartments in East Legon, Cantonments and Spintex, Accra.",
+    "Luxury furnished short-let apartments across East Legon, Cantonments, Spintex, Ashaley Botwe and Pantang in Accra.",
   keywords: [
     "Vidan Luxury Apartments",
     "luxury apartments Accra",
@@ -12,6 +12,9 @@ export const metadata: Metadata = {
     "East Legon apartments",
     "Cantonments apartments",
     "Spintex apartments",
+    "Adenta short lets",
+    "Ashaley Botwe apartments",
+    "Pantang apartments",
   ],
 };
 

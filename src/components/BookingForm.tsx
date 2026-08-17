@@ -16,42 +16,52 @@ const residences = [
   {
     value: "Beautiful One-Bedroom — East Legon",
     label: "Beautiful One-Bedroom — East Legon",
-    rate: "$130 / GH₵1,430 per night",
+    rate: "$130 / approximately GH₵1,430 per night",
   },
   {
-    value: "Classy Two-Bedroom — East Legon",
-    label: "Classy Two-Bedroom — East Legon",
-    rate: "$140 / GH₵1,540 per night",
+    value: "Affordable Two-Bedroom — East Legon",
+    label: "Affordable Two-Bedroom — East Legon",
+    rate: "GH₵2,350 / approximately $214 per night",
   },
   {
-    value: "Pool & Gym One-Bedroom — East Legon",
-    label: "Pool & Gym One-Bedroom — East Legon",
-    rate: "$200 / GH₵2,200 per night",
+    value: "Furnished One-Bedroom — Cantonments",
+    label: "Furnished One-Bedroom — Cantonments",
+    rate: "$120 / approximately GH₵1,320 per night",
   },
   {
-    value: "Serviced Two-Bedroom — East Legon",
-    label: "Serviced Two-Bedroom — East Legon",
-    rate: "$214 / GH₵2,350 per night",
-  },
-  {
-    value: "Cantonments One-Bedroom",
-    label: "Cantonments One-Bedroom",
-    rate: "$120 / GH₵1,320 per night",
-  },
-  {
-    value: "Spintex Two-Bedroom",
-    label: "Spintex Two-Bedroom",
-    rate: "$85 / GH₵935 per night",
+    value: "Two-Bedroom Furnished Apartment — Spintex",
+    label: "Two-Bedroom Furnished Apartment — Spintex",
+    rate: "$85 / approximately GH₵935 per night",
   },
   {
     value: "Spintex City Apartment",
     label: "Spintex City Apartment",
-    rate: "$75 / GH₵825 per night",
+    rate: "$75 / approximately GH₵825 per night",
   },
   {
-    value: "Classic Studio Residence — Accra Collection",
-    label: "Classic Studio Residence — Accra Collection",
-    rate: "$104 / GH₵1,140 per night",
+    value: "Premium One-Bedroom Suite — Ashaley Botwe",
+    label: "Premium One-Bedroom Suite — Ashaley Botwe",
+    rate: "GH₵1,980 / approximately $180 per night",
+  },
+  {
+    value: "Modern Two-Bedroom — Ashaley Botwe",
+    label: "Modern Two-Bedroom — Ashaley Botwe",
+    rate: "GH₵1,740 / approximately $158 per night",
+  },
+  {
+    value: "Classy Two-Bedroom — Pantang Junction",
+    label: "Classy Two-Bedroom — Pantang Junction",
+    rate: "$140 / approximately GH₵1,540 per night",
+  },
+  {
+    value: "Serene Three-Bedroom — Pantang Junction",
+    label: "Serene Three-Bedroom — Pantang Junction",
+    rate: "$150 / approximately GH₵1,650 per night",
+  },
+  {
+    value: "Classic Studio — Ashaley Botwe",
+    label: "Classic Studio — Ashaley Botwe",
+    rate: "GH₵1,140 / approximately $104 per night",
   },
 ];
 

@@ -135,8 +135,8 @@ export default function Home() {
       {/* HERO */}
       <section className="relative min-h-screen overflow-hidden">
         <Image
-          src="/images/hero.webp"
-          alt="Luxury apartment interior"
+          src="/images/vidan/07-ashaley-botwe-modern-two-bedroom/01.webp"
+          alt="Vidan furnished apartment living area in Accra"
           fill
           priority
           className="object-cover"
@@ -150,7 +150,7 @@ export default function Home() {
         <div className="container-page relative z-10 flex min-h-screen items-end pb-24 pt-40">
           <div className="max-w-4xl">
             <p className="mb-6 text-[10px] uppercase tracking-[0.28em] text-[var(--gold)]">
-              East Legon · Cantonments · Spintex
+              East Legon · Cantonments · Spintex · Adenta
             </p>
 
             <h1 className="text-5xl font-light leading-[0.95] tracking-[-0.05em] text-white sm:text-7xl lg:text-8xl">
@@ -319,8 +319,8 @@ export default function Home() {
           <div className="mt-16 grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
             <figure className="group relative min-h-[500px] overflow-hidden sm:min-h-[620px] lg:min-h-[720px]">
               <Image
-                src="/images/experience-living.webp"
-                alt="Spacious furnished apartment living area"
+                src="/images/vidan/08-pantang-classy-two-bedroom/01.webp"
+                alt="Vidan serviced apartment living and dining area in Pantang"
                 fill
                 className="object-cover transition duration-700 group-hover:scale-[1.025]"
                 sizes="(max-width: 1024px) 100vw, 68vw"
@@ -349,8 +349,8 @@ export default function Home() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
               <figure className="group relative min-h-[320px] overflow-hidden lg:min-h-0">
                 <Image
-                  src="/images/pool-residence.webp"
-                  alt="Residence with a private swimming pool"
+                  src="/images/vidan/07-ashaley-botwe-modern-two-bedroom/06.webp"
+                  alt="Swimming pool available at a selected Vidan residence"
                   fill
                   className="object-cover transition duration-700 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 32vw"
@@ -371,8 +371,8 @@ export default function Home() {
 
               <figure className="group relative min-h-[320px] overflow-hidden lg:min-h-0">
                 <Image
-                  src="/images/cantonments-building.webp"
-                  alt="Modern apartment building exterior"
+                  src="/images/vidan/03-cantonments-one-bedroom/01.webp"
+                  alt="Vidan apartment building exterior in Cantonments, Accra"
                   fill
                   className="object-cover transition duration-700 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 32vw"
@@ -505,6 +505,12 @@ export default function Home() {
                   description:
                     "A lively and convenient Accra base with excellent access to the airport corridor, retail and everyday essentials.",
                 },
+                {
+                  number: "04",
+                  name: "Adenta & Pantang",
+                  description:
+                    "Serene residential options around Ashaley Botwe and Pantang, with convenient access to major routes across Accra.",
+                },
               ].map((place) => (
                 <div
                   key={place.name}
@@ -570,12 +576,18 @@ export default function Home() {
 
                   <p className="mt-6 text-sm leading-7 text-[var(--muted)]">
                     Explore the East Legon area before you arrive. Vidan also
-                    offers stays in Cantonments and Spintex, giving you the
-                    flexibility to choose the right side of the city.
+                    offers stays in Cantonments, Spintex, Ashaley Botwe and
+                    Pantang, giving you more ways to choose your Accra base.
                   </p>
 
                   <div className="mt-8 space-y-3 border-y border-white/10 py-6">
-                    {["East Legon", "Cantonments", "Spintex"].map((area) => (
+                    {[
+                      "East Legon",
+                      "Cantonments",
+                      "Spintex",
+                      "Ashaley Botwe",
+                      "Pantang",
+                    ].map((area) => (
                       <div
                         key={area}
                         className="flex items-center gap-3 text-sm text-white/65"

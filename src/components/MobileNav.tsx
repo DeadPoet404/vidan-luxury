@@ -199,10 +199,11 @@ export default function MobileNav() {
                     <MessageCircle size={19} />
                   </a>
 
-                  <div className="mt-5 flex items-center justify-between pb-2 text-[8px] uppercase tracking-[0.16em] text-white/25">
+                  <div className="mt-5 flex flex-wrap items-center justify-between gap-3 pb-2 text-[8px] uppercase tracking-[0.16em] text-white/25">
                     <span>East Legon</span>
                     <span>Cantonments</span>
                     <span>Spintex</span>
+                <span>Adenta</span>
                   </div>
                 </div>
               </div>
