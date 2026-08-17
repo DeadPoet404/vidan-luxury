@@ -31,7 +31,7 @@ const residences = [
       "Private parking",
     ],
     image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85",
+      "/images/east-legon-one-bedroom.webp",
   },
   {
     name: "Classy Two-Bedroom",
@@ -45,7 +45,7 @@ const residences = [
       "24/7 security",
     ],
     image:
-      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=85",
+      "/images/east-legon-two-bedroom.webp",
   },
   {
     name: "Pool & Gym One-Bedroom",
@@ -59,7 +59,7 @@ const residences = [
       "24/7 security",
     ],
     image:
-      "https://images.unsplash.com/photo-1706164971299-cfa23ec76083?auto=format&fit=crop&w=1400&q=85",
+      "/images/pool-residence.webp",
   },
   {
     name: "Serviced Two-Bedroom",
@@ -73,7 +73,7 @@ const residences = [
       "Private parking",
     ],
     image:
-      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1400&q=85",
+      "/images/east-legon-serviced.webp",
   },
   {
     name: "Cantonments One-Bedroom",
@@ -87,7 +87,7 @@ const residences = [
       "24/7 security",
     ],
     image:
-      "https://images.unsplash.com/photo-1760235674447-fe0cc115b697?auto=format&fit=crop&w=1400&q=85",
+      "/images/cantonments-building.webp",
   },
   {
     name: "Spintex Two-Bedroom",
@@ -101,7 +101,7 @@ const residences = [
       "Private parking",
     ],
     image:
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85",
+      "/images/spintex-two-bedroom.webp",
   },
   {
     name: "Spintex City Apartment",
@@ -115,7 +115,7 @@ const residences = [
       "24/7 security",
     ],
     image:
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85",
+      "/images/spintex-city.webp",
   },
   {
     name: "Classic Studio Residence",
@@ -129,7 +129,7 @@ const residences = [
       "Fitted kitchen",
     ],
     image:
-      "https://images.unsplash.com/photo-1759162788764-f40075c8857f?auto=format&fit=crop&w=1400&q=85",
+      "/images/studio-building.webp",
   },
 ];
 

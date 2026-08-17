@@ -3,6 +3,7 @@ import Link from "next/link";
 import BookingForm from "@/components/BookingForm";
 import ResidencesGrid from "@/components/ResidencesGrid";
 import MobileNav from "@/components/MobileNav";
+import FAQSection from "@/components/FAQSection";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -108,6 +109,13 @@ export default function Home() {
             >
               Location
             </a>
+
+            <a
+              href="#faq"
+              className="transition hover:text-white"
+            >
+              FAQ
+            </a>
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
@@ -127,7 +135,7 @@ export default function Home() {
       {/* HERO */}
       <section className="relative min-h-screen overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2200&q=90"
+          src="/images/hero.webp"
           alt="Luxury apartment interior"
           fill
           priority
@@ -311,7 +319,7 @@ export default function Home() {
           <div className="mt-16 grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
             <figure className="group relative min-h-[500px] overflow-hidden sm:min-h-[620px] lg:min-h-[720px]">
               <Image
-                src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1800&q=88"
+                src="/images/experience-living.webp"
                 alt="Spacious furnished apartment living area"
                 fill
                 className="object-cover transition duration-700 group-hover:scale-[1.025]"
@@ -341,7 +349,7 @@ export default function Home() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
               <figure className="group relative min-h-[320px] overflow-hidden lg:min-h-0">
                 <Image
-                  src="https://images.unsplash.com/photo-1706164971299-cfa23ec76083?auto=format&fit=crop&w=1200&q=88"
+                  src="/images/pool-residence.webp"
                   alt="Residence with a private swimming pool"
                   fill
                   className="object-cover transition duration-700 group-hover:scale-105"
@@ -363,7 +371,7 @@ export default function Home() {
 
               <figure className="group relative min-h-[320px] overflow-hidden lg:min-h-0">
                 <Image
-                  src="https://images.unsplash.com/photo-1760235674447-fe0cc115b697?auto=format&fit=crop&w=1200&q=88"
+                  src="/images/cantonments-building.webp"
                   alt="Modern apartment building exterior"
                   fill
                   className="object-cover transition duration-700 group-hover:scale-105"
@@ -726,6 +734,8 @@ export default function Home() {
             </div>
 
             <BookingForm />
+      <FAQSection />
+
           </div>
         </div>
       </section>
