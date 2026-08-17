@@ -68,3 +68,61 @@ img {
 @utility luxury-border {
   border: 1px solid var(--border);
 }
+
+
+/* ACCESSIBILITY AND FIXED-HEADER SUPPORT */
+html {
+  scroll-padding-top: 6rem;
+}
+
+body {
+  overflow-x: hidden;
+  color-scheme: dark;
+}
+
+:where(
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  summary
+):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 9999;
+  transform: translateY(-200%);
+  background: var(--gold);
+  color: #0b0b0a;
+  padding: 0.85rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

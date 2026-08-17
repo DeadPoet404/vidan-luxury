@@ -72,7 +72,7 @@ const amenities = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       {/* NAVIGATION */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.06] bg-black/35 backdrop-blur-xl">
         <div className="container-page flex h-24 items-center justify-between">
@@ -255,7 +255,7 @@ export default function Home() {
       {/* RESIDENCES */}
       <section
         id="apartments"
-        className="container-page py-28 sm:py-36"
+        className="scroll-mt-24 container-page py-28 sm:py-36"
       >
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div>
@@ -280,7 +280,7 @@ export default function Home() {
       {/* EXPERIENCE */}
       <section
         id="experience"
-        className="border-t border-white/10 bg-[var(--surface)]"
+        className="scroll-mt-24 border-t border-white/10 bg-[var(--surface)]"
       >
         <div className="container-page py-28 sm:py-36">
           <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
@@ -456,7 +456,7 @@ export default function Home() {
       {/* LOCATION */}
       <section
         id="location"
-        className="border-t border-white/10 bg-[var(--background)]"
+        className="scroll-mt-24 border-t border-white/10 bg-[var(--background)]"
       >
         <div className="container-page py-28 sm:py-36">
           <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
@@ -624,7 +624,7 @@ export default function Home() {
       {/* BOOK DIRECT */}
       <section
         id="book"
-        className="border-t border-white/10 bg-[var(--surface)]"
+        className="scroll-mt-24 border-t border-white/10 bg-[var(--surface)]"
       >
         <div className="container-page py-28 sm:py-36">
           <div className="grid gap-16 lg:grid-cols-[0.72fr_1.28fr] lg:items-start lg:gap-20">
