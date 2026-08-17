@@ -268,6 +268,133 @@ export default function Home() {
         </div>
       </section>
 
+      {/* LOCATION */}
+      <section
+        id="location"
+        className="relative overflow-hidden border-t border-white/[0.07]"
+      >
+        <div className="container-page py-28 sm:py-36">
+          <div className="grid gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
+            <div className="lg:sticky lg:top-32">
+              <p className="eyebrow">The Neighbourhood</p>
+
+              <h2 className="mt-6 max-w-lg text-4xl font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
+                Accra,
+                <br />
+                <span className="text-white/40">
+                  on your terms.
+                </span>
+              </h2>
+
+              <p className="mt-8 max-w-md text-sm leading-7 text-[var(--muted)] sm:text-base">
+                Wake up close to where you want to be. Vidan places you
+                across three of Accra&apos;s most sought-after neighbourhoods,
+                giving every stay its own rhythm.
+              </p>
+
+              <div className="mt-10 flex items-center gap-3 text-[10px] tracking-[0.18em] text-white/40 uppercase">
+                <MapPin size={14} className="text-[var(--gold)]" />
+                Accra, Ghana
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {[
+                {
+                  number: "01",
+                  name: "East Legon",
+                  description:
+                    "A polished residential and lifestyle district, surrounded by restaurants, cafés, shopping and entertainment.",
+                  image:
+                    "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1400&q=85",
+                },
+                {
+                  number: "02",
+                  name: "Cantonments",
+                  description:
+                    "Central, established and effortlessly connected — ideal for business travellers and longer city stays.",
+                  image:
+                    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1400&q=85",
+                },
+                {
+                  number: "03",
+                  name: "Spintex",
+                  description:
+                    "A vibrant Accra base with convenient access to the city, airport corridor and everyday essentials.",
+                  image:
+                    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=85",
+                },
+              ].map((location) => (
+                <article
+                  key={location.name}
+                  className="group relative min-h-[260px] overflow-hidden border border-white/10"
+                >
+                  <Image
+                    src={location.image}
+                    alt={`${location.name} lifestyle`}
+                    fill
+                    className="object-cover transition duration-700 group-hover:scale-105"
+                    sizes="(max-width: 1024px) 100vw, 65vw"
+                  />
+
+                  <div className="absolute inset-0 bg-black/45 transition group-hover:bg-black/35" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
+
+                  <div className="relative flex min-h-[260px] flex-col justify-between p-7 sm:p-9">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] tracking-[0.2em] text-[var(--gold-light)]">
+                        {location.number}
+                      </span>
+
+                      <ArrowUpRight
+                        size={16}
+                        className="text-white/50 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[var(--gold)]"
+                      />
+                    </div>
+
+                    <div className="max-w-lg">
+                      <h3 className="text-3xl font-light tracking-[-0.025em] text-white sm:text-4xl">
+                        {location.name}
+                      </h3>
+
+                      <p className="mt-3 max-w-md text-xs leading-6 text-white/55 sm:text-sm">
+                        {location.description}
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* LOCATION STATEMENT */}
+        <div className="border-t border-white/[0.07] bg-[var(--surface)]">
+          <div className="container-page flex flex-col gap-8 py-12 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[10px] tracking-[0.2em] text-[var(--gold)] uppercase">
+                Wherever you are going
+              </p>
+
+              <p className="mt-2 text-sm text-white/55">
+                Your apartment should be part of the journey.
+              </p>
+            </div>
+
+            <a
+              href="#book"
+              className="group flex w-fit items-center gap-3 text-[10px] font-semibold tracking-[0.2em] text-white uppercase"
+            >
+              Find your apartment
+
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 transition group-hover:border-[var(--gold)] group-hover:bg-[var(--gold)] group-hover:text-black">
+                <ArrowUpRight size={13} />
+              </span>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* EXPERIENCE */}
       <section
         id="experience"
