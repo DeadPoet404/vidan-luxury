@@ -1,10 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import BookingForm from "@/components/BookingForm";
 import {
   ArrowDown,
   ArrowUpRight,
   BedDouble,
-  CalendarDays,
   Check,
   MapPin,
   MessageCircle,
@@ -16,7 +16,6 @@ const residences = [
     location: "East Legon",
     type: "1 Bedroom · Furnished",
     price: "$130",
-    priceGhs: "GH₵ 1,980",
     image:
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=90",
   },
@@ -25,7 +24,6 @@ const residences = [
     location: "Cantonments",
     type: "1 Bedroom · Furnished",
     price: "$120",
-    priceGhs: "GH₵ 1,830",
     image:
       "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1600&q=90",
   },
@@ -34,9 +32,35 @@ const residences = [
     location: "Spintex",
     type: "2 Bedroom · Furnished",
     price: "$85",
-    priceGhs: "GH₵ 1,250",
     image:
       "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=90",
+  },
+];
+
+const amenities = [
+  "24/7 Security",
+  "High-Speed Wi-Fi",
+  "Smart TV",
+  "Fully Fitted Kitchen",
+  "Private Parking",
+  "Prime Locations",
+];
+
+const locations = [
+  {
+    name: "East Legon",
+    description:
+      "Restaurants, cafés, shopping, entertainment and a polished residential atmosphere.",
+  },
+  {
+    name: "Cantonments",
+    description:
+      "A central, established neighbourhood with convenient access to business and the city.",
+  },
+  {
+    name: "Spintex",
+    description:
+      "A vibrant Accra base with convenient access to the city and airport corridor.",
   },
 ];
 
@@ -46,17 +70,17 @@ export default function Home() {
       {/* NAVIGATION */}
       <header className="absolute inset-x-0 top-0 z-50">
         <div className="container-page flex h-24 items-center justify-between">
-          <a href="/" className="group">
+          <Link href="/" className="group">
             <p className="text-lg font-semibold tracking-[0.18em]">
               VIDAN
             </p>
 
-            <p className="mt-1 text-[9px] tracking-[0.3em] text-[var(--muted)] uppercase">
+            <p className="mt-1 text-[9px] uppercase tracking-[0.3em] text-[var(--muted)]">
               Luxury Apartments
             </p>
-          </a>
+          </Link>
 
-          <nav className="hidden items-center gap-10 text-[11px] tracking-[0.14em] text-white/65 uppercase md:flex">
+          <nav className="hidden items-center gap-8 text-[11px] uppercase tracking-[0.14em] text-white/70 md:flex">
             <a
               href="#apartments"
               className="transition hover:text-white"
@@ -81,13 +105,10 @@ export default function Home() {
 
           <a
             href="#book"
-            className="group flex items-center gap-2 border border-[var(--gold)] px-5 py-3 text-[10px] font-semibold tracking-[0.18em] text-[var(--gold)] uppercase transition hover:bg-[var(--gold)] hover:text-black"
+            className="flex items-center gap-2 border border-[var(--gold)] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black"
           >
-            Book Your Stay
-            <ArrowUpRight
-              size={13}
-              className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            />
+            Book
+            <ArrowUpRight size={13} />
           </a>
         </div>
       </header>
@@ -95,7 +116,7 @@ export default function Home() {
       {/* HERO */}
       <section className="relative min-h-screen overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2400&q=90"
+          src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2200&q=90"
           alt="Luxury apartment interior"
           fill
           priority
@@ -103,59 +124,52 @@ export default function Home() {
           sizes="100vw"
         />
 
-        <div className="absolute inset-0 bg-black/35" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-black/10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-        <div className="container-page relative z-10 flex min-h-screen items-end pb-24 pt-40 sm:pb-28 lg:pb-32">
+        <div className="container-page relative z-10 flex min-h-screen items-end pb-24 pt-40">
           <div className="max-w-4xl">
-            <div className="mb-7 flex items-center gap-4">
-              <span className="h-px w-10 bg-[var(--gold)]" />
+            <p className="mb-6 text-[10px] uppercase tracking-[0.28em] text-[var(--gold)]">
+              East Legon · Cantonments · Spintex
+            </p>
 
-              <p className="text-[10px] font-medium tracking-[0.28em] text-[var(--gold-light)] uppercase">
-                Accra · Ghana
-              </p>
-            </div>
-
-            <h1 className="max-w-4xl text-5xl font-light leading-[0.94] tracking-[-0.045em] text-white sm:text-7xl lg:text-[6.8rem]">
+            <h1 className="text-5xl font-light leading-[0.95] tracking-[-0.05em] text-white sm:text-7xl lg:text-8xl">
               Stay somewhere
               <br />
-              <span className="text-white/90">
-                worth arriving for.
-              </span>
+              worth arriving for.
             </h1>
 
-            <div className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-              <p className="max-w-md text-sm leading-7 text-white/65 sm:text-base">
-                Thoughtfully furnished apartments in Accra&apos;s most
-                desirable neighbourhoods — designed for business, leisure
-                and everything between.
-              </p>
+            <p className="mt-8 max-w-md text-sm leading-7 text-white/70 sm:text-base">
+              Luxury furnished residences across Accra&apos;s most desirable
+              neighbourhoods.
+            </p>
 
+            <div className="mt-10 flex flex-wrap gap-4">
               <a
                 href="#apartments"
-                className="group flex shrink-0 items-center gap-3 text-[10px] font-semibold tracking-[0.2em] text-white uppercase"
+                className="bg-[var(--gold)] px-7 py-4 text-xs font-semibold uppercase tracking-[0.16em] text-black transition hover:bg-[var(--gold-light)]"
               >
-                Explore residences
+                Explore
+              </a>
 
-                <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 transition group-hover:border-[var(--gold)] group-hover:bg-[var(--gold)] group-hover:text-black">
-                  <ArrowDown
-                    size={14}
-                    className="transition-transform group-hover:translate-y-0.5"
-                  />
-                </span>
+              <a
+                href="#book"
+                className="border border-white/20 px-7 py-4 text-xs font-semibold uppercase tracking-[0.16em] text-white transition hover:border-white/50"
+              >
+                Check Availability
               </a>
             </div>
           </div>
         </div>
 
-        <div className="absolute bottom-8 right-8 z-10 hidden items-center gap-3 lg:flex">
-          <div className="h-px w-8 bg-white/30" />
-
-          <p className="text-[9px] tracking-[0.22em] text-white/50 uppercase">
-            East Legon · Cantonments · Spintex
-          </p>
-        </div>
+        <a
+          href="#apartments"
+          className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 text-white/70 transition hover:text-[var(--gold)]"
+          aria-label="Scroll to apartments"
+        >
+          <ArrowDown size={22} />
+        </a>
       </section>
 
       {/* RESIDENCES */}
@@ -163,471 +177,310 @@ export default function Home() {
         id="apartments"
         className="container-page py-28 sm:py-36"
       >
-        <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div>
             <p className="eyebrow">The Residences</p>
 
-            <h2 className="mt-5 max-w-2xl text-4xl font-light leading-tight tracking-[-0.035em] sm:text-6xl">
-              A place that feels
+            <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl">
+              Find your
               <br />
-              <span className="text-white/40">entirely your own.</span>
+              perfect stay.
             </h2>
           </div>
 
           <p className="max-w-sm text-sm leading-7 text-[var(--muted)]">
-            From intimate city stays to spacious serviced apartments,
-            discover Vidan residences across some of Accra&apos;s most
-            sought-after neighbourhoods.
+            A curated collection of furnished apartments designed for
+            business, leisure and extended stays.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-5 lg:grid-cols-[1.2fr_0.9fr_0.9fr]">
-          {residences.map((residence, index) => (
+        <div className="mt-16 grid gap-5 lg:grid-cols-3">
+          {residences.map((home) => (
             <article
-              key={residence.name}
-              className={`group relative overflow-hidden bg-[var(--surface)] ${
-                index === 0 ? "lg:row-span-2" : ""
-              }`}
+              key={home.name}
+              className="group overflow-hidden bg-[var(--surface)]"
             >
-              <div
-                className={`relative ${
-                  index === 0 ? "aspect-[4/5] lg:h-full" : "aspect-[4/3]"
-                }`}
-              >
+              <div className="relative aspect-[4/5]">
                 <Image
-                  src={residence.image}
-                  alt={residence.name}
+                  src={home.image}
+                  alt={home.name}
                   fill
-                  className="object-cover transition duration-700 ease-out group-hover:scale-105"
-                  sizes={
-                    index === 0
-                      ? "(max-width: 1024px) 100vw, 50vw"
-                      : "(max-width: 1024px) 100vw, 30vw"
-                  }
+                  className="object-cover transition duration-700 group-hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
-                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-                  <div className="flex items-center gap-2 text-[10px] tracking-[0.16em] text-[var(--gold-light)] uppercase">
-                    <MapPin size={12} />
-                    {residence.location}
+                <div className="absolute bottom-0 w-full p-6">
+                  <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[var(--gold)]">
+                    <MapPin size={11} />
+                    {home.location}
                   </div>
 
-                  <h3 className="mt-3 text-2xl font-light tracking-[-0.02em] text-white">
-                    {residence.name}
+                  <h3 className="mt-3 text-2xl font-light text-white">
+                    {home.name}
                   </h3>
 
-                  <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-white/65">
-                    <span className="flex items-center gap-2">
-                      <BedDouble size={14} />
-                      {residence.type}
-                    </span>
+                  <div className="mt-2 flex items-center gap-2 text-xs text-white/60">
+                    <BedDouble size={13} />
+                    {home.type}
                   </div>
 
-                  <div className="mt-6 flex items-end justify-between border-t border-white/15 pt-5">
+                  <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
                     <div>
-                      <p className="text-[9px] tracking-[0.16em] text-white/40 uppercase">
+                      <p className="text-[9px] uppercase tracking-[0.16em] text-white/40">
                         From
                       </p>
 
-                      <p className="mt-1 text-xl font-light text-white">
-                        {residence.price}
-                        <span className="ml-1 text-xs text-white/45">
+                      <p className="text-xl text-white">
+                        {home.price}
+                        <span className="text-xs text-white/40">
+                          {" "}
                           / night
                         </span>
                       </p>
-
-                      <p className="mt-1 text-[10px] text-white/40">
-                        {residence.priceGhs} equivalent
-                      </p>
                     </div>
 
-                    <a
-                      href="#book"
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 text-white transition group-hover:border-[var(--gold)] group-hover:bg-[var(--gold)] group-hover:text-black"
-                      aria-label={`View ${residence.name}`}
-                    >
-                      <ArrowUpRight size={16} />
-                    </a>
+                    <ArrowUpRight
+                      className="text-white/60 transition group-hover:text-[var(--gold)]"
+                      size={18}
+                    />
                   </div>
                 </div>
               </div>
             </article>
           ))}
         </div>
+      </section>
 
-        <div className="mt-10 flex justify-center">
-          <a
-            href="#book"
-            className="group flex items-center gap-3 border-b border-white/20 pb-2 text-[10px] font-semibold tracking-[0.2em] text-white uppercase transition hover:border-[var(--gold)] hover:text-[var(--gold)]"
-          >
-            View all residences
+      {/* EXPERIENCE */}
+      <section
+        id="experience"
+        className="border-t border-white/10 bg-[var(--surface)]"
+      >
+        <div className="container-page py-28 sm:py-36">
+          <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <p className="eyebrow">The Experience</p>
 
-            <ArrowUpRight
-              size={13}
-              className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
-            />
-          </a>
+              <h2 className="mt-5 text-4xl font-light tracking-[-0.04em] sm:text-6xl">
+                Comfort,
+                <br />
+                beautifully considered.
+              </h2>
+
+              <p className="mt-8 max-w-lg text-sm leading-7 text-[var(--muted)]">
+                Every residence includes the essentials for effortless living
+                in Accra, giving you the freedom to settle in and make the
+                space your own.
+              </p>
+
+              <div className="mt-10 grid grid-cols-2 gap-3">
+                {amenities.map((item) => (
+                  <div
+                    key={item}
+                    className="border border-white/10 p-4 text-sm text-white/70 transition hover:border-[var(--gold)]"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative aspect-[5/6] overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=90"
+                alt="Elegant luxury apartment interior"
+                fill
+                className="object-cover transition duration-700 hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 55vw"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* LOCATION */}
       <section
         id="location"
-        className="relative overflow-hidden border-t border-white/[0.07]"
+        className="border-t border-white/10"
       >
         <div className="container-page py-28 sm:py-36">
-          <div className="grid gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
-            <div className="lg:sticky lg:top-32">
-              <p className="eyebrow">The Neighbourhood</p>
+          <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <p className="eyebrow">Accra, Ghana</p>
 
-              <h2 className="mt-6 max-w-lg text-4xl font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
-                Accra,
+              <h2 className="mt-5 text-4xl font-light tracking-[-0.04em] sm:text-6xl">
+                Three exceptional
                 <br />
-                <span className="text-white/40">
-                  on your terms.
-                </span>
+                neighbourhoods.
               </h2>
 
-              <p className="mt-8 max-w-md text-sm leading-7 text-[var(--muted)] sm:text-base">
-                Wake up close to where you want to be. Vidan places you
-                across three of Accra&apos;s most sought-after neighbourhoods,
-                giving every stay its own rhythm.
+              <p className="mt-8 max-w-md text-sm leading-7 text-[var(--muted)]">
+                East Legon, Cantonments and Spintex place you close to
+                business, restaurants, shopping and Accra&apos;s vibrant
+                lifestyle.
               </p>
 
-              <div className="mt-10 flex items-center gap-3 text-[10px] tracking-[0.18em] text-white/40 uppercase">
-                <MapPin size={14} className="text-[var(--gold)]" />
+              <div className="mt-8 flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-white/40">
+                <MapPin size={13} className="text-[var(--gold)]" />
                 Accra, Ghana
               </div>
             </div>
 
             <div className="space-y-4">
-              {[
-                {
-                  number: "01",
-                  name: "East Legon",
-                  description:
-                    "A polished residential and lifestyle district, surrounded by restaurants, cafés, shopping and entertainment.",
-                  image:
-                    "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1400&q=85",
-                },
-                {
-                  number: "02",
-                  name: "Cantonments",
-                  description:
-                    "Central, established and effortlessly connected — ideal for business travellers and longer city stays.",
-                  image:
-                    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1400&q=85",
-                },
-                {
-                  number: "03",
-                  name: "Spintex",
-                  description:
-                    "A vibrant Accra base with convenient access to the city, airport corridor and everyday essentials.",
-                  image:
-                    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=85",
-                },
-              ].map((location) => (
+              {locations.map((place, index) => (
                 <article
-                  key={location.name}
-                  className="group relative min-h-[260px] overflow-hidden border border-white/10"
+                  key={place.name}
+                  className="group border border-white/10 p-6 transition hover:border-[var(--gold)]"
                 >
-                  <Image
-                    src={location.image}
-                    alt={`${location.name} lifestyle`}
-                    fill
-                    className="object-cover transition duration-700 group-hover:scale-105"
-                    sizes="(max-width: 1024px) 100vw, 65vw"
-                  />
+                  <div className="flex items-start justify-between gap-6">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold)]">
+                        0{index + 1}
+                      </p>
 
-                  <div className="absolute inset-0 bg-black/45 transition group-hover:bg-black/35" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
-
-                  <div className="relative flex min-h-[260px] flex-col justify-between p-7 sm:p-9">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] tracking-[0.2em] text-[var(--gold-light)]">
-                        {location.number}
-                      </span>
-
-                      <ArrowUpRight
-                        size={16}
-                        className="text-white/50 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[var(--gold)]"
-                      />
-                    </div>
-
-                    <div className="max-w-lg">
-                      <h3 className="text-3xl font-light tracking-[-0.025em] text-white sm:text-4xl">
-                        {location.name}
+                      <h3 className="mt-2 text-2xl font-light">
+                        {place.name}
                       </h3>
 
-                      <p className="mt-3 max-w-md text-xs leading-6 text-white/55 sm:text-sm">
-                        {location.description}
+                      <p className="mt-3 max-w-lg text-xs leading-6 text-white/45">
+                        {place.description}
                       </p>
                     </div>
+
+                    <ArrowUpRight
+                      className="shrink-0 text-white/30 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[var(--gold)]"
+                      size={18}
+                    />
                   </div>
                 </article>
               ))}
             </div>
           </div>
         </div>
-
-        {/* LOCATION STATEMENT */}
-        <div className="border-t border-white/[0.07] bg-[var(--surface)]">
-          <div className="container-page flex flex-col gap-8 py-12 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-[10px] tracking-[0.2em] text-[var(--gold)] uppercase">
-                Wherever you are going
-              </p>
-
-              <p className="mt-2 text-sm text-white/55">
-                Your apartment should be part of the journey.
-              </p>
-            </div>
-
-            <a
-              href="#book"
-              className="group flex w-fit items-center gap-3 text-[10px] font-semibold tracking-[0.2em] text-white uppercase"
-            >
-              Find your apartment
-
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 transition group-hover:border-[var(--gold)] group-hover:bg-[var(--gold)] group-hover:text-black">
-                <ArrowUpRight size={13} />
-              </span>
-            </a>
-          </div>
-        </div>
       </section>
 
-      {/* DIRECT BOOKING */}
+      {/* BOOK DIRECT */}
       <section
         id="book"
-        className="relative overflow-hidden border-t border-white/[0.07] bg-[var(--surface)]"
+        className="border-t border-white/10 bg-[var(--surface)]"
       >
         <div className="container-page py-28 sm:py-36">
           <div className="grid gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div>
               <p className="eyebrow">Book Direct</p>
 
-              <h2 className="mt-6 max-w-xl text-4xl font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
+              <h2 className="mt-5 text-4xl font-light tracking-[-0.04em] sm:text-6xl">
                 Your stay.
                 <br />
-                <span className="text-white/40">
-                  Your way.
-                </span>
+                Your way.
               </h2>
 
-              <p className="mt-8 max-w-md text-sm leading-7 text-[var(--muted)] sm:text-base">
-                Tell us when you&apos;re coming and what you&apos;re looking
-                for. Our team will confirm availability and help you find
-                the right Vidan residence.
+              <p className="mt-8 max-w-md text-sm leading-7 text-[var(--muted)]">
+                Send your preferred dates directly through WhatsApp and our
+                team will confirm availability.
               </p>
 
-              <div className="mt-10 space-y-5">
+              <div className="mt-10 space-y-4">
                 {[
-                  "Direct communication with our team",
-                  "Access to our Accra residences",
-                  "Rates confirmed before you arrive",
-                  "Personalised stay assistance",
+                  "Direct communication",
+                  "Priority availability",
+                  "Personal stay assistance",
+                  "Fast WhatsApp response",
                 ].map((item) => (
                   <div
                     key={item}
-                    className="flex items-center gap-3 text-sm text-white/65"
+                    className="flex items-center gap-3"
                   >
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[var(--gold)] text-[var(--gold)]">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full border border-[var(--gold)] text-[var(--gold)]">
                       <Check size={11} />
                     </span>
 
-                    {item}
+                    <span className="text-sm text-white/70">
+                      {item}
+                    </span>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-12 border-l border-[var(--gold)]/50 pl-5">
-                <p className="text-[9px] font-semibold tracking-[0.2em] text-[var(--gold)] uppercase">
-                  Coming to Accra in December?
+              <div className="mt-12 border-l border-[var(--gold)] pl-5">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)]">
+                  Detty December
                 </p>
 
-                <p className="mt-2 max-w-sm text-xs leading-6 text-white/45">
-                  Secure your preferred residence early. December stays are
-                  subject to availability.
+                <p className="mt-2 text-xs leading-6 text-white/50">
+                  Reserve early for peak season availability.
                 </p>
               </div>
             </div>
 
-            {/* ENQUIRY PANEL */}
             <BookingForm />
-            </div>
           </div>
         </div>
       </section>
 
-      {/* EXPERIENCE */}
-      <section
-        id="experience"
-        className="border-t border-white/[0.07] bg-[var(--surface)]"
-      >
-        <div className="container-page py-28 sm:py-36">
-          <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <p className="eyebrow">The Vidan Experience</p>
+      {/* FINAL CTA */}
+      <section className="container-page py-24">
+        <div className="border border-white/10 bg-[var(--surface)] p-8 sm:p-14">
+          <p className="eyebrow">Vidan Luxury Apartments</p>
 
-              <h2 className="mt-6 max-w-xl text-4xl font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
-                Everything you need.
-                <br />
-                <span className="text-white/40">
-                  Nothing you don&apos;t.
-                </span>
-              </h2>
+          <h2 className="mt-4 max-w-3xl text-4xl font-light tracking-[-0.04em] sm:text-6xl">
+            Experience Accra with comfort, privacy and style.
+          </h2>
 
-              <p className="mt-8 max-w-lg text-sm leading-7 text-[var(--muted)] sm:text-base">
-                Come home to thoughtfully furnished spaces, modern comforts
-                and the freedom to settle into Accra on your own terms.
-              </p>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <a
+              href="#book"
+              className="bg-[var(--gold)] px-7 py-4 text-xs font-semibold uppercase tracking-[0.16em] text-black transition hover:bg-[var(--gold-light)]"
+            >
+              Book Direct
+            </a>
 
-              <div className="mt-10">
-                <a
-                  href="#book"
-                  className="group inline-flex items-center gap-3 text-[10px] font-semibold tracking-[0.2em] text-[var(--gold)] uppercase"
-                >
-                  Plan your stay
-
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--gold)] transition group-hover:bg-[var(--gold)] group-hover:text-black">
-                    <ArrowUpRight
-                      size={14}
-                      className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                    />
-                  </span>
-                </a>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[5/4]">
-                <Image
-                  src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=90"
-                  alt="Elegant Vidan-style apartment interior"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 55vw"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-              </div>
-
-              <div className="absolute -bottom-6 -left-4 hidden border border-white/10 bg-[var(--background)] p-6 sm:block lg:-left-8">
-                <p className="text-[9px] tracking-[0.2em] text-[var(--gold)] uppercase">
-                  Accra
-                </p>
-
-                <p className="mt-2 text-sm text-white/70">
-                  East Legon · Cantonments · Spintex
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* AMENITIES */}
-          <div className="mt-28 border-t border-white/10 pt-12 sm:mt-36">
-            <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="eyebrow">Included</p>
-
-                <h3 className="mt-3 text-2xl font-light tracking-[-0.02em] sm:text-3xl">
-                  Comfort, considered.
-                </h3>
-              </div>
-
-              <p className="max-w-xs text-xs leading-6 text-white/40">
-                The essentials for an effortless stay, wherever your plans
-                take you.
-              </p>
-            </div>
-
-            <div className="grid border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  number: "01",
-                  title: "Fully Fitted Kitchens",
-                  description:
-                    "Settle in, cook at home and stay on your own schedule.",
-                },
-                {
-                  number: "02",
-                  title: "High-Speed Wi-Fi",
-                  description:
-                    "Stay connected whether you are working or unwinding.",
-                },
-                {
-                  number: "03",
-                  title: "24/7 Security",
-                  description:
-                    "Peace of mind throughout your stay in Accra.",
-                },
-                {
-                  number: "04",
-                  title: "Smart TV & DSTV",
-                  description:
-                    "Switch off and enjoy your favourite entertainment.",
-                },
-                {
-                  number: "05",
-                  title: "Private Parking",
-                  description:
-                    "Convenient parking available across the residences.",
-                },
-                {
-                  number: "06",
-                  title: "Prime Locations",
-                  description:
-                    "Close to restaurants, shopping, entertainment and more.",
-                },
-              ].map((amenity) => (
-                <div
-                  key={amenity.number}
-                  className="group border-b border-r border-white/10 p-7 transition hover:bg-white/[0.025] sm:p-9"
-                >
-                  <div className="flex items-start justify-between">
-                    <span className="text-[9px] tracking-[0.18em] text-[var(--gold)]">
-                      {amenity.number}
-                    </span>
-
-                    <ArrowUpRight
-                      size={14}
-                      className="text-white/20 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--gold)]"
-                    />
-                  </div>
-
-                  <h4 className="mt-10 text-lg font-light text-white">
-                    {amenity.title}
-                  </h4>
-
-                  <p className="mt-3 max-w-xs text-xs leading-6 text-white/40">
-                    {amenity.description}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <a
+              href="https://wa.me/233591581142"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 border border-white/20 px-7 py-4 text-xs font-semibold uppercase tracking-[0.16em] text-white transition hover:border-[var(--gold)] hover:text-[var(--gold)]"
+            >
+              WhatsApp
+              <ArrowUpRight size={14} />
+            </a>
           </div>
         </div>
       </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/10">
+        <div className="container-page flex flex-col gap-6 py-10 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold tracking-[0.18em]">
+              VIDAN
+            </p>
+
+            <p className="mt-1 text-[9px] uppercase tracking-[0.25em] text-white/35">
+              Luxury Apartments · Accra
+            </p>
+          </div>
+
+          <p className="text-[10px] text-white/30">
+            © {new Date().getFullYear()} Vidan Luxury Apartments
+          </p>
+        </div>
+      </footer>
+
       {/* FLOATING WHATSAPP */}
       <a
-        href="https://wa.me/233591581142?text=Hello%20Vidan%20Luxury%20Apartments%20%F0%9F%91%8B%20I%27d%20like%20to%20check%20availability."
+        href="https://wa.me/233591581142"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat with Vidan on WhatsApp"
-        className="group fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-full border border-white/10 bg-[#151513] px-4 py-3 shadow-2xl transition hover:border-[var(--gold)] sm:bottom-7 sm:right-7"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--gold)] text-black shadow-2xl transition hover:scale-105 hover:bg-[var(--gold-light)]"
       >
-        <span className="hidden text-[9px] font-semibold tracking-[0.16em] text-white uppercase sm:block">
-          Chat with Vidan
-        </span>
-
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--gold)] text-black transition group-hover:scale-105">
-          <MessageCircle size={18} />
-        </span>
+        <MessageCircle size={22} />
       </a>
-
     </main>
   );
 }
