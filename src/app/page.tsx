@@ -305,58 +305,82 @@ export default function Home() {
       {/* LOCATION */}
       <section
         id="location"
-        className="border-t border-white/10"
+        className="border-t border-white/10 bg-[var(--background)]"
       >
         <div className="container-page py-28 sm:py-36">
-          <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div>
               <p className="eyebrow">Accra, Ghana</p>
 
-              <h2 className="mt-5 text-4xl font-light tracking-[-0.04em] sm:text-6xl">
-                Three exceptional
+              <h2 className="mt-5 max-w-xl text-4xl font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
+                Stay close to
                 <br />
-                neighbourhoods.
+                <span className="text-white/40">
+                  everything.
+                </span>
               </h2>
 
-              <p className="mt-8 max-w-md text-sm leading-7 text-[var(--muted)]">
-                East Legon, Cantonments and Spintex place you close to
-                business, restaurants, shopping and Accra&apos;s vibrant
-                lifestyle.
+              <p className="mt-8 max-w-md text-sm leading-7 text-[var(--muted)] sm:text-base">
+                Your Vidan residence puts you in some of Accra&apos;s most
+                sought-after neighbourhoods — close to business, dining,
+                shopping and the city&apos;s energy.
               </p>
 
-              <div className="mt-8 flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-white/40">
-                <MapPin size={13} className="text-[var(--gold)]" />
+              <div className="mt-10 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.18em] text-white/40">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--gold)]/50">
+                  <MapPin size={13} className="text-[var(--gold)]" />
+                </span>
+
                 Accra, Ghana
               </div>
             </div>
 
-            <div className="space-y-4">
-              {locations.map((place, index) => (
-                <article
+            <div className="divide-y divide-white/10 border-y border-white/10">
+              {[
+                {
+                  number: "01",
+                  name: "East Legon",
+                  description:
+                    "A premium residential district surrounded by restaurants, cafés, shopping and Accra's modern social scene.",
+                },
+                {
+                  number: "02",
+                  name: "Cantonments",
+                  description:
+                    "Established, central and refined — with easy access to business districts, embassies, dining and the city centre.",
+                },
+                {
+                  number: "03",
+                  name: "Spintex",
+                  description:
+                    "A lively and convenient Accra base with excellent access to the airport corridor, retail and everyday essentials.",
+                },
+              ].map((place) => (
+                <div
                   key={place.name}
-                  className="group border border-white/10 p-6 transition hover:border-[var(--gold)]"
+                  className="group flex gap-6 py-7 sm:gap-10"
                 >
-                  <div className="flex items-start justify-between gap-6">
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold)]">
-                        0{index + 1}
-                      </p>
+                  <span className="pt-1 text-[9px] tracking-[0.2em] text-[var(--gold)]">
+                    {place.number}
+                  </span>
 
-                      <h3 className="mt-2 text-2xl font-light">
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between gap-5">
+                      <h3 className="text-2xl font-light transition-colors group-hover:text-[var(--gold)] sm:text-3xl">
                         {place.name}
                       </h3>
 
-                      <p className="mt-3 max-w-lg text-xs leading-6 text-white/45">
-                        {place.description}
-                      </p>
+                      <ArrowUpRight
+                        size={18}
+                        className="mt-1 shrink-0 text-white/20 transition-all group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[var(--gold)]"
+                      />
                     </div>
 
-                    <ArrowUpRight
-                      className="shrink-0 text-white/30 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[var(--gold)]"
-                      size={18}
-                    />
+                    <p className="mt-3 max-w-xl text-xs leading-6 text-white/40 sm:text-sm">
+                      {place.description}
+                    </p>
                   </div>
-                </article>
+                </div>
               ))}
             </div>
           </div>
