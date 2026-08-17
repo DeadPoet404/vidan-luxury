@@ -597,51 +597,121 @@ export default function Home() {
         className="border-t border-white/10 bg-[var(--surface)]"
       >
         <div className="container-page py-28 sm:py-36">
-          <div className="grid gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-            <div>
+          <div className="grid gap-16 lg:grid-cols-[0.72fr_1.28fr] lg:items-start lg:gap-20">
+            <div className="lg:sticky lg:top-10">
               <p className="eyebrow">Book Direct</p>
 
-              <h2 className="mt-5 text-4xl font-light tracking-[-0.04em] sm:text-6xl">
-                Your stay.
+              <h2 className="mt-5 text-4xl font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
+                Your stay,
                 <br />
-                Your way.
+                handled personally.
               </h2>
 
               <p className="mt-8 max-w-md text-sm leading-7 text-[var(--muted)]">
-                Send your preferred dates directly through WhatsApp and our
-                team will confirm availability.
+                Tell us what you need once. The Vidan team will match your
+                dates, confirm the residence and send the next steps directly
+                through WhatsApp.
               </p>
 
-              <div className="mt-10 space-y-4">
+              <div className="mt-10 border-y border-white/10">
                 {[
-                  "Direct communication",
-                  "Priority availability",
-                  "Personal stay assistance",
-                  "Fast WhatsApp response",
-                ].map((item) => (
+                  {
+                    number: "01",
+                    title: "Share your stay details",
+                    copy: "Choose your dates, party size and preferred residence.",
+                  },
+                  {
+                    number: "02",
+                    title: "Receive live availability",
+                    copy: "The team confirms the best available option and rate.",
+                  },
+                  {
+                    number: "03",
+                    title: "Complete your reservation",
+                    copy: "Payment and check-in instructions follow after confirmation.",
+                  },
+                ].map((step) => (
                   <div
-                    key={item}
-                    className="flex items-center gap-3"
+                    key={step.number}
+                    className="grid grid-cols-[auto_1fr] gap-5 border-b border-white/10 py-6 last:border-b-0"
                   >
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full border border-[var(--gold)] text-[var(--gold)]">
-                      <Check size={11} />
+                    <span className="pt-1 text-[9px] tracking-[0.18em] text-[var(--gold)]">
+                      {step.number}
                     </span>
 
-                    <span className="text-sm text-white/70">
-                      {item}
-                    </span>
+                    <div>
+                      <h3 className="text-sm font-medium text-white/80">
+                        {step.title}
+                      </h3>
+
+                      <p className="mt-2 text-xs leading-6 text-white/35">
+                        {step.copy}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-12 border-l border-[var(--gold)] pl-5">
+              <div className="mt-10">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-white/30">
+                  Prefer to speak directly?
+                </p>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                  <a
+                    href="https://wa.me/233591581142"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between border border-white/10 p-4 transition hover:border-[var(--gold)]/60"
+                  >
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.15em] text-white/30">
+                        Bookings & WhatsApp
+                      </p>
+
+                      <p className="mt-2 text-sm text-white/70">
+                        +233 59 158 1142
+                      </p>
+                    </div>
+
+                    <ArrowUpRight
+                      size={15}
+                      className="text-white/25 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--gold)]"
+                    />
+                  </a>
+
+                  <a
+                    href="https://wa.me/233549517317"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between border border-white/10 p-4 transition hover:border-[var(--gold)]/60"
+                  >
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.15em] text-white/30">
+                        East Legon enquiries
+                      </p>
+
+                      <p className="mt-2 text-sm text-white/70">
+                        +233 54 951 7317
+                      </p>
+                    </div>
+
+                    <ArrowUpRight
+                      size={15}
+                      className="text-white/25 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--gold)]"
+                    />
+                  </a>
+                </div>
+              </div>
+
+              <div className="mt-10 border-l border-[var(--gold)] pl-5">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)]">
                   Detty December 2026
                 </p>
 
-                <p className="mt-2 text-xs leading-6 text-white/50">
-                  Peak-season dates are limited. Reserve early for the
-                  best choice of residence.
+                <p className="mt-2 text-xs leading-6 text-white/45">
+                  Peak-season dates are limited. Early enquiries receive the
+                  widest choice of available residences.
                 </p>
               </div>
             </div>
