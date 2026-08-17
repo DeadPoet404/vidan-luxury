@@ -615,7 +615,7 @@ export default function Home() {
       >
         <div className="container-page py-28 sm:py-36">
           <div className="grid gap-16 lg:grid-cols-[0.72fr_1.28fr] lg:items-start lg:gap-20">
-            <div className="lg:sticky lg:top-10">
+            <div className="lg:self-start">
               <p className="eyebrow">Book Direct</p>
 
               <h2 className="mt-5 text-4xl font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
