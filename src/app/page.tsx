@@ -4,6 +4,7 @@ import BookingForm from "@/components/BookingForm";
 import ResidencesGrid from "@/components/ResidencesGrid";
 import MobileNav from "@/components/MobileNav";
 import FAQSection from "@/components/FAQSection";
+import SiteFooter from "@/components/SiteFooter";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -783,24 +784,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-white/10">
-        <div className="container-page flex flex-col gap-6 py-10 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-semibold tracking-[0.18em]">
-              VIDAN
-            </p>
-
-            <p className="mt-1 text-[9px] uppercase tracking-[0.25em] text-white/35">
-              Luxury Apartments · Accra
-            </p>
-          </div>
-
-          <p className="text-[10px] text-white/30">
-            © {new Date().getFullYear()} Vidan Luxury Apartments
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
 
       {/* FLOATING WHATSAPP */}
       <a
