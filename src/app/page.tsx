@@ -5,18 +5,66 @@ import ResidencesGrid from "@/components/ResidencesGrid";
 import {
   ArrowDown,
   ArrowUpRight,
+  CarFront,
   Check,
+  CookingPot,
   MapPin,
   MessageCircle,
+  ShieldCheck,
+  Sparkles,
+  Tv,
+  Wifi,
 } from "lucide-react";
 
 const amenities = [
-  "24/7 Security",
-  "High-Speed Wi-Fi",
-  "Smart TV",
-  "Fully Fitted Kitchen",
-  "Private Parking",
-  "Prime Locations",
+  {
+    name: "24/7 Security",
+    description:
+      "Security support across the featured portfolio, throughout your stay.",
+    icon: ShieldCheck,
+  },
+  {
+    name: "High-Speed Wi-Fi",
+    description:
+      "Reliable connectivity for remote work, streaming and staying in touch.",
+    icon: Wifi,
+  },
+  {
+    name: "Smart Entertainment",
+    description:
+      "Smart TV access for relaxed evenings and entertainment on your schedule.",
+    icon: Tv,
+  },
+  {
+    name: "Fitted Kitchens",
+    description:
+      "Practical, fully fitted spaces for breakfast, dinner or an extended stay.",
+    icon: CookingPot,
+  },
+  {
+    name: "Private Parking",
+    description:
+      "Convenient on-site parking available across the featured residences.",
+    icon: CarFront,
+  },
+  {
+    name: "Prime Locations",
+    description:
+      "Stay close to Accra's business, dining, shopping and entertainment hubs.",
+    icon: MapPin,
+  },
+  {
+    name: "Serviced Stays",
+    description:
+      "Housekeeping support is available with selected serviced residences.",
+    icon: Sparkles,
+  },
+  {
+    name: "Direct Guest Support",
+    description:
+      "Speak with the Vidan team directly before arrival and during your stay.",
+    icon: MessageCircle,
+  },
 ];
 
 export default function Home() {
@@ -217,44 +265,171 @@ export default function Home() {
         className="border-t border-white/10 bg-[var(--surface)]"
       >
         <div className="container-page py-28 sm:py-36">
-          <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
             <div>
-              <p className="eyebrow">The Experience</p>
+              <p className="eyebrow">The Vidan Experience</p>
 
-              <h2 className="mt-5 text-4xl font-light tracking-[-0.04em] sm:text-6xl">
-                Comfort,
+              <h2 className="mt-5 max-w-4xl text-4xl font-light leading-[0.98] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+                More than a
                 <br />
-                beautifully considered.
+                <span className="text-white/35">
+                  beautiful apartment.
+                </span>
               </h2>
+            </div>
 
-              <p className="mt-8 max-w-lg text-sm leading-7 text-[var(--muted)]">
-                Every residence includes the essentials for effortless living
-                in Accra, giving you the freedom to settle in and make the
-                space your own.
+            <div className="lg:pb-2">
+              <p className="max-w-xl text-sm leading-7 text-[var(--muted)] sm:text-base">
+                Thoughtfully furnished spaces, practical everyday comforts and
+                direct guest support — designed to help you settle into Accra
+                from the moment you arrive.
               </p>
 
-              <div className="mt-10 grid grid-cols-2 gap-3">
-                {amenities.map((item) => (
-                  <div
-                    key={item}
-                    className="border border-white/10 p-4 text-sm text-white/70 transition hover:border-[var(--gold)]"
-                  >
-                    {item}
-                  </div>
-                ))}
+              <a
+                href="#book"
+                className="group mt-7 inline-flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--gold)]"
+              >
+                Plan your stay
+
+                <ArrowUpRight
+                  size={14}
+                  className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-16 grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
+            <figure className="group relative min-h-[500px] overflow-hidden sm:min-h-[620px] lg:min-h-[720px]">
+              <Image
+                src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1800&q=88"
+                alt="Spacious furnished apartment living area"
+                fill
+                className="object-cover transition duration-700 group-hover:scale-[1.025]"
+                sizes="(max-width: 1024px) 100vw, 68vw"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/10" />
+
+              <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 p-6 sm:p-8">
+                <div>
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--gold)]">
+                    01 · Your own space
+                  </p>
+
+                  <p className="mt-2 text-2xl font-light text-white sm:text-3xl">
+                    Furnished for real living
+                  </p>
+                </div>
+
+                <ArrowUpRight
+                  size={20}
+                  className="shrink-0 text-white/50 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[var(--gold)]"
+                />
+              </figcaption>
+            </figure>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              <figure className="group relative min-h-[320px] overflow-hidden lg:min-h-0">
+                <Image
+                  src="https://images.unsplash.com/photo-1706164971299-cfa23ec76083?auto=format&fit=crop&w=1200&q=88"
+                  alt="Residence with a private swimming pool"
+                  fill
+                  className="object-cover transition duration-700 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 32vw"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+                <figcaption className="absolute inset-x-0 bottom-0 p-6">
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--gold)]">
+                    02 · Selected residences
+                  </p>
+
+                  <p className="mt-2 text-xl font-light text-white">
+                    Poolside stays
+                  </p>
+                </figcaption>
+              </figure>
+
+              <figure className="group relative min-h-[320px] overflow-hidden lg:min-h-0">
+                <Image
+                  src="https://images.unsplash.com/photo-1760235674447-fe0cc115b697?auto=format&fit=crop&w=1200&q=88"
+                  alt="Modern apartment building exterior"
+                  fill
+                  className="object-cover transition duration-700 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 32vw"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/5 to-transparent" />
+
+                <figcaption className="absolute inset-x-0 bottom-0 p-6">
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--gold)]">
+                    03 · Across Accra
+                  </p>
+
+                  <p className="mt-2 text-xl font-light text-white">
+                    Prime city addresses
+                  </p>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <div className="mt-20 grid gap-12 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20">
+            <div>
+              <p className="eyebrow">Everything you need</p>
+
+              <h3 className="mt-5 text-3xl font-light leading-tight tracking-[-0.04em] sm:text-5xl">
+                The essentials,
+                <br />
+                already considered.
+              </h3>
+
+              <p className="mt-7 max-w-md text-sm leading-7 text-[var(--muted)]">
+                From a reliable connection to a secure place to park, each
+                detail is selected to make short visits and longer stays feel
+                straightforward.
+              </p>
+
+              <div className="mt-8 border-l border-[var(--gold)] pl-5">
+                <p className="text-xs leading-6 text-white/45">
+                  Amenities vary by residence. Confirm the features that matter
+                  to you when making your enquiry.
+                </p>
               </div>
             </div>
 
-            <div className="relative aspect-[5/6] overflow-hidden">
-              <Image
-                src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=90"
-                alt="Elegant luxury apartment interior"
-                fill
-                className="object-cover transition duration-700 hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 55vw"
-              />
+            <div className="grid gap-3 sm:grid-cols-2">
+              {amenities.map(
+                ({ name, description, icon: Icon }, index) => (
+                  <article
+                    key={name}
+                    className="group min-h-[190px] border border-white/10 p-6 transition duration-300 hover:border-[var(--gold)]/60 hover:bg-white/[0.02]"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="flex h-10 w-10 items-center justify-center border border-[var(--gold)]/35 text-[var(--gold)] transition group-hover:bg-[var(--gold)] group-hover:text-black">
+                        <Icon
+                          size={17}
+                          strokeWidth={1.5}
+                        />
+                      </span>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                      <span className="text-[9px] tracking-[0.18em] text-white/20">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+
+                    <h4 className="mt-6 text-lg font-light text-white">
+                      {name}
+                    </h4>
+
+                    <p className="mt-3 text-xs leading-6 text-white/40">
+                      {description}
+                    </p>
+                  </article>
+                ),
+              )}
             </div>
           </div>
         </div>
