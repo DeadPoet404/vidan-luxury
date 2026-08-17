@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import BookingForm from "@/components/BookingForm";
 import ResidencesGrid from "@/components/ResidencesGrid";
+import MobileNav from "@/components/MobileNav";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -71,7 +72,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       {/* NAVIGATION */}
-      <header className="absolute inset-x-0 top-0 z-50">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.06] bg-black/35 backdrop-blur-xl">
         <div className="container-page flex h-24 items-center justify-between">
           <Link href="/" className="group">
             <p className="text-lg font-semibold tracking-[0.18em]">
@@ -83,7 +84,10 @@ export default function Home() {
             </p>
           </Link>
 
-          <nav className="hidden items-center gap-8 text-[11px] uppercase tracking-[0.14em] text-white/70 md:flex">
+          <nav
+            aria-label="Primary navigation"
+            className="hidden items-center gap-8 text-[11px] uppercase tracking-[0.14em] text-white/70 md:flex"
+          >
             <a
               href="#apartments"
               className="transition hover:text-white"
@@ -106,13 +110,17 @@ export default function Home() {
             </a>
           </nav>
 
-          <a
-            href="#book"
-            className="flex items-center gap-2 border border-[var(--gold)] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black"
-          >
-            Book
-            <ArrowUpRight size={13} />
-          </a>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href="#book"
+              className="flex h-11 items-center gap-2 border border-[var(--gold)] px-4 text-[9px] font-semibold uppercase tracking-[0.18em] text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black sm:px-5 sm:text-[10px]"
+            >
+              Book
+              <ArrowUpRight size={13} />
+            </a>
+
+            <MobileNav />
+          </div>
         </div>
       </header>
 
@@ -177,8 +185,9 @@ export default function Home() {
 
       {/* DETTY DECEMBER */}
       <section
+        id="december"
         aria-label="December direct booking offer"
-        className="relative overflow-hidden border-y border-black/10 bg-[var(--gold)] text-[#0b0b0a]"
+        className="relative scroll-mt-24 overflow-hidden border-y border-black/10 bg-[var(--gold)] text-[#0b0b0a]"
       >
         <div
           aria-hidden="true"
