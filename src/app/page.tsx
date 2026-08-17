@@ -734,11 +734,12 @@ export default function Home() {
             </div>
 
             <BookingForm />
-      <FAQSection />
 
           </div>
         </div>
       </section>
+
+      <FAQSection />
 
       {/* FINAL CTA */}
       <section className="container-page py-24">
