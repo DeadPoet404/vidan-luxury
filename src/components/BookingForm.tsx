@@ -136,21 +136,21 @@ export default function BookingForm() {
                 value="East Legon Residence"
                 className="bg-black"
               >
-                East Legon
+                East Legon · $130 / GH₵1,430
               </option>
 
               <option
                 value="Cantonments Residence"
                 className="bg-black"
               >
-                Cantonments
+                Cantonments · $120 / GH₵1,320
               </option>
 
               <option
                 value="Spintex Residence"
                 className="bg-black"
               >
-                Spintex
+                Spintex · $85 / GH₵935
               </option>
             </select>
           </label>

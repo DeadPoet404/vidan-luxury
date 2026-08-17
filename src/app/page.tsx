@@ -15,7 +15,8 @@ const residences = [
     name: "East Legon Residence",
     location: "East Legon",
     type: "1 Bedroom · Furnished",
-    price: "$130",
+    priceUsd: "$130",
+    priceGhs: "GH₵1,430",
     image:
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=90",
   },
@@ -23,7 +24,8 @@ const residences = [
     name: "Cantonments Residence",
     location: "Cantonments",
     type: "1 Bedroom · Furnished",
-    price: "$120",
+    priceUsd: "$120",
+    priceGhs: "GH₵1,320",
     image:
       "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1600&q=90",
   },
@@ -31,7 +33,8 @@ const residences = [
     name: "Spintex Residence",
     location: "Spintex",
     type: "2 Bedroom · Furnished",
-    price: "$85",
+    priceUsd: "$85",
+    priceGhs: "GH₵935",
     image:
       "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=90",
   },
@@ -44,24 +47,6 @@ const amenities = [
   "Fully Fitted Kitchen",
   "Private Parking",
   "Prime Locations",
-];
-
-const locations = [
-  {
-    name: "East Legon",
-    description:
-      "Restaurants, cafés, shopping, entertainment and a polished residential atmosphere.",
-  },
-  {
-    name: "Cantonments",
-    description:
-      "A central, established neighbourhood with convenient access to business and the city.",
-  },
-  {
-    name: "Spintex",
-    description:
-      "A vibrant Accra base with convenient access to the city and airport corridor.",
-  },
 ];
 
 export default function Home() {
@@ -226,31 +211,53 @@ export default function Home() {
                     {home.type}
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
+                  <div className="mt-5 grid grid-cols-2 border-t border-white/10 pt-4">
                     <div>
                       <p className="text-[9px] uppercase tracking-[0.16em] text-white/40">
-                        From
+                        USD / night
                       </p>
 
-                      <p className="text-xl text-white">
-                        {home.price}
-                        <span className="text-xs text-white/40">
-                          {" "}
-                          / night
-                        </span>
+                      <p className="mt-1 text-xl text-white">
+                        {home.priceUsd}
                       </p>
                     </div>
 
-                    <ArrowUpRight
-                      className="text-white/60 transition group-hover:text-[var(--gold)]"
-                      size={18}
-                    />
+                    <div className="border-l border-white/10 pl-4">
+                      <p className="text-[9px] uppercase tracking-[0.16em] text-white/40">
+                        GHS / night
+                      </p>
+
+                      <p className="mt-1 text-xl text-white">
+                        {home.priceGhs}
+                      </p>
+                    </div>
                   </div>
+
+                  <a
+                    href={`https://wa.me/233591581142?text=${encodeURIComponent(
+                      `Hello Vidan Luxury Apartments, I'd like to check availability for the ${home.name}.`,
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Check availability for ${home.name} on WhatsApp`}
+                    className="mt-4 flex items-center justify-between border-t border-white/10 pt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70 transition hover:text-[var(--gold)]"
+                  >
+                    Check dates
+                    <ArrowUpRight
+                      className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      size={16}
+                    />
+                  </a>
                 </div>
               </div>
             </article>
           ))}
         </div>
+
+        <p className="mt-5 text-right text-[10px] leading-5 text-white/35">
+          GHS equivalents are indicative, rounded amounts and are confirmed at
+          the time of booking.
+        </p>
       </section>
 
       {/* EXPERIENCE */}
