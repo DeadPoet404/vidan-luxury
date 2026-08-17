@@ -135,7 +135,7 @@ export default function Home() {
       {/* HERO */}
       <section className="relative min-h-screen overflow-hidden">
         <Image
-          src="/images/vidan/07-ashaley-botwe-modern-two-bedroom/01.webp"
+          src="/images/vidan/07-ashaley-botwe-modern-two-bedroom/05.webp"
           alt="Vidan furnished apartment living area in Accra"
           fill
           priority
