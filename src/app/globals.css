@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b0b0a;
+  --foreground: #f5f2eb;
+
+  --surface: #121210;
+  --surface-soft: #181815;
+
+  --gold: #c8a96b;
+  --gold-light: #dfc58f;
+
+  --muted: #a7a39a;
+  --border: rgba(255, 255, 255, 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--gold);
+  color: #0b0b0a;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+}
+
+@utility container-page {
+  width: min(100% - 2rem, 1400px);
+  margin-inline: auto;
+
+  @media (min-width: 768px) {
+    width: min(100% - 4rem, 1400px);
+  }
+
+  @media (min-width: 1280px) {
+    width: min(100% - 6rem, 1400px);
+  }
+}
+
+@utility eyebrow {
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+@utility luxury-border {
+  border: 1px solid var(--border);
 }
