@@ -157,6 +157,65 @@ export default function Home() {
         </a>
       </section>
 
+      {/* DETTY DECEMBER */}
+      <section
+        aria-label="December direct booking offer"
+        className="relative overflow-hidden border-y border-black/10 bg-[var(--gold)] text-[#0b0b0a]"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-8 top-1/2 -translate-y-1/2 text-[9rem] font-semibold leading-none tracking-[-0.08em] text-black/[0.04] sm:text-[13rem]"
+        >
+          DEC
+        </div>
+
+        <div className="container-page relative z-10 grid gap-8 py-10 sm:py-12 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-black/55">
+              Detty December · 2026
+            </p>
+
+            <h2 className="mt-3 max-w-3xl text-3xl font-light tracking-[-0.04em] sm:text-4xl">
+              Book December direct — no platform booking fees.
+            </h2>
+
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-black/60">
+              Peak-season dates in Accra move quickly. Send your preferred
+              dates now and confirm your stay directly with the Vidan team.
+            </p>
+
+            <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-black/55">
+              {["Direct rates", "Priority response", "Personal assistance"].map(
+                (benefit) => (
+                  <span
+                    key={benefit}
+                    className="flex items-center gap-2"
+                  >
+                    <Check size={13} strokeWidth={2.5} />
+                    {benefit}
+                  </span>
+                ),
+              )}
+            </div>
+          </div>
+
+          <a
+            href={`https://wa.me/233591581142?text=${encodeURIComponent(
+              "Hello Vidan Luxury Apartments, I'd like to check availability for December 2026.",
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex w-fit items-center gap-3 bg-[#0b0b0a] px-7 py-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-black"
+          >
+            Check December dates
+            <ArrowUpRight
+              size={15}
+              className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          </a>
+        </div>
+      </section>
+
       {/* RESIDENCES */}
       <section
         id="apartments"
@@ -439,11 +498,12 @@ export default function Home() {
 
               <div className="mt-12 border-l border-[var(--gold)] pl-5">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)]">
-                  Detty December
+                  Detty December 2026
                 </p>
 
                 <p className="mt-2 text-xs leading-6 text-white/50">
-                  Reserve early for peak season availability.
+                  Peak-season dates are limited. Reserve early for the
+                  best choice of residence.
                 </p>
               </div>
             </div>
