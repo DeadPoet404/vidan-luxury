@@ -1,44 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import BookingForm from "@/components/BookingForm";
+import ResidencesGrid from "@/components/ResidencesGrid";
 import {
   ArrowDown,
   ArrowUpRight,
-  BedDouble,
   Check,
   MapPin,
   MessageCircle,
 } from "lucide-react";
-
-const residences = [
-  {
-    name: "East Legon Residence",
-    location: "East Legon",
-    type: "1 Bedroom · Furnished",
-    priceUsd: "$130",
-    priceGhs: "GH₵1,430",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=90",
-  },
-  {
-    name: "Cantonments Residence",
-    location: "Cantonments",
-    type: "1 Bedroom · Furnished",
-    priceUsd: "$120",
-    priceGhs: "GH₵1,320",
-    image:
-      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1600&q=90",
-  },
-  {
-    name: "Spintex Residence",
-    location: "Spintex",
-    type: "2 Bedroom · Furnished",
-    priceUsd: "$85",
-    priceGhs: "GH₵935",
-    image:
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=90",
-  },
-];
 
 const amenities = [
   "24/7 Security",
@@ -233,90 +203,12 @@ export default function Home() {
           </div>
 
           <p className="max-w-sm text-sm leading-7 text-[var(--muted)]">
-            A curated collection of furnished apartments designed for
-            business, leisure and extended stays.
+            Browse furnished studios, one-bedroom and two-bedroom stays across
+            Vidan&apos;s growing Accra portfolio.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-5 lg:grid-cols-3">
-          {residences.map((home) => (
-            <article
-              key={home.name}
-              className="group overflow-hidden bg-[var(--surface)]"
-            >
-              <div className="relative aspect-[4/5]">
-                <Image
-                  src={home.image}
-                  alt={home.name}
-                  fill
-                  className="object-cover transition duration-700 group-hover:scale-105"
-                  sizes="(max-width: 1024px) 100vw, 33vw"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-
-                <div className="absolute bottom-0 w-full p-6">
-                  <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[var(--gold)]">
-                    <MapPin size={11} />
-                    {home.location}
-                  </div>
-
-                  <h3 className="mt-3 text-2xl font-light text-white">
-                    {home.name}
-                  </h3>
-
-                  <div className="mt-2 flex items-center gap-2 text-xs text-white/60">
-                    <BedDouble size={13} />
-                    {home.type}
-                  </div>
-
-                  <div className="mt-5 grid grid-cols-2 border-t border-white/10 pt-4">
-                    <div>
-                      <p className="text-[9px] uppercase tracking-[0.16em] text-white/40">
-                        USD / night
-                      </p>
-
-                      <p className="mt-1 text-xl text-white">
-                        {home.priceUsd}
-                      </p>
-                    </div>
-
-                    <div className="border-l border-white/10 pl-4">
-                      <p className="text-[9px] uppercase tracking-[0.16em] text-white/40">
-                        GHS / night
-                      </p>
-
-                      <p className="mt-1 text-xl text-white">
-                        {home.priceGhs}
-                      </p>
-                    </div>
-                  </div>
-
-                  <a
-                    href={`https://wa.me/233591581142?text=${encodeURIComponent(
-                      `Hello Vidan Luxury Apartments, I'd like to check availability for the ${home.name}.`,
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Check availability for ${home.name} on WhatsApp`}
-                    className="mt-4 flex items-center justify-between border-t border-white/10 pt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70 transition hover:text-[var(--gold)]"
-                  >
-                    Check dates
-                    <ArrowUpRight
-                      className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                      size={16}
-                    />
-                  </a>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <p className="mt-5 text-right text-[10px] leading-5 text-white/35">
-          GHS equivalents are indicative, rounded amounts and are confirmed at
-          the time of booking.
-        </p>
+        <ResidencesGrid />
       </section>
 
       {/* EXPERIENCE */}
