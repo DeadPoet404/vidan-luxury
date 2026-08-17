@@ -450,6 +450,77 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          <div className="mt-20 overflow-hidden border border-white/10 bg-[var(--surface)]">
+            <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
+              <div className="relative min-h-[380px] bg-[#181815] lg:min-h-[520px]">
+                <iframe
+                  title="Map showing East Legon in Accra, Ghana"
+                  src="https://www.google.com/maps?q=East%20Legon%2C%20Accra%2C%20Ghana&z=13&output=embed"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="absolute inset-0 h-full w-full border-0 grayscale-[0.85] contrast-[1.08] invert-[0.9] opacity-80"
+                />
+
+                <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
+
+                <div className="pointer-events-none absolute bottom-4 left-4 bg-black/80 px-4 py-3 backdrop-blur-sm">
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-[var(--gold)]">
+                    Neighbourhood map
+                  </p>
+
+                  <p className="mt-1 text-[10px] text-white/50">
+                    Exact check-in details are shared after confirmation.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-between p-7 sm:p-10 lg:p-12">
+                <div>
+                  <p className="eyebrow">Explore the neighbourhood</p>
+
+                  <h3 className="mt-5 text-3xl font-light leading-tight tracking-[-0.04em] sm:text-4xl">
+                    An Accra base that keeps you connected.
+                  </h3>
+
+                  <p className="mt-6 text-sm leading-7 text-[var(--muted)]">
+                    Explore the East Legon area before you arrive. Vidan also
+                    offers stays in Cantonments and Spintex, giving you the
+                    flexibility to choose the right side of the city.
+                  </p>
+
+                  <div className="mt-8 space-y-3 border-y border-white/10 py-6">
+                    {["East Legon", "Cantonments", "Spintex"].map((area) => (
+                      <div
+                        key={area}
+                        className="flex items-center gap-3 text-sm text-white/65"
+                      >
+                        <MapPin
+                          size={14}
+                          className="text-[var(--gold)]"
+                        />
+                        {area}, Accra
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=East+Legon%2C+Accra%2C+Ghana"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group mt-10 inline-flex w-fit items-center gap-3 border border-[var(--gold)] px-6 py-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--gold)] transition hover:bg-[var(--gold)] hover:text-black"
+                >
+                  View in Google Maps
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
