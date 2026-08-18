@@ -265,39 +265,58 @@ export async function sendTelegramAlert(
     };
   }
 
-  try {
-    const res = await fetch(
-      `https://api.telegram.org/bot${token}/sendMessage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text,
-          disable_web_page_preview: true,
-        }),
-        signal: AbortSignal.timeout(15_000),
-        cache: "no-store",
-      },
-    );
+  let lastError = "unknown error";
 
-    if (!res.ok) {
-      return { ok: false, error: `Telegram HTTP ${res.status}` };
+  // One automatic retry absorbs transient network hiccups (DNS/TLS).
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      const res = await fetch(
+        `https://api.telegram.org/bot${token}/sendMessage`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text,
+            disable_web_page_preview: true,
+          }),
+          signal: AbortSignal.timeout(15_000),
+          cache: "no-store",
+        },
+      );
+
+      if (!res.ok) {
+        lastError = `Telegram HTTP ${res.status}`;
+        if (res.status < 500) break; // 4xx will not heal by retrying
+        continue;
+      }
+
+      const data = (await res.json()) as {
+        ok?: boolean;
+        description?: string;
+      };
+
+      if (data.ok) return { ok: true };
+      return {
+        ok: false,
+        error: data.description ?? "unknown Telegram error",
+      };
+    } catch (error) {
+      const cause = (
+        error as { cause?: { code?: string; message?: string } }
+      )?.cause;
+      lastError =
+        cause?.code ??
+        cause?.message ??
+        (error instanceof Error ? error.message : "network error");
+
+      if (attempt < 2) {
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+      }
     }
-
-    const data = (await res.json()) as {
-      ok?: boolean;
-      description?: string;
-    };
-    return data.ok
-      ? { ok: true }
-      : { ok: false, error: data.description ?? "unknown Telegram error" };
-  } catch (error) {
-    return {
-      ok: false,
-      error: error instanceof Error ? error.message : "network error",
-    };
   }
+
+  return { ok: false, error: lastError };
 }
 
 // ── Scripted fallback (no API key / Gemini unavailable) ─────
