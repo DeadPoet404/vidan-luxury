@@ -5,6 +5,7 @@ import ResidencesGrid from "@/components/ResidencesGrid";
 import MobileNav from "@/components/MobileNav";
 import FAQSection from "@/components/FAQSection";
 import SiteFooter from "@/components/SiteFooter";
+import ConciergeWidgetLoader from "@/components/ConciergeWidgetLoader";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -786,16 +787,8 @@ export default function Home() {
 
       <SiteFooter />
 
-      {/* FLOATING WHATSAPP */}
-      <a
-        href="https://wa.me/233591581142"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat with Vidan on WhatsApp"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--gold)] text-black shadow-2xl transition hover:scale-105 hover:bg-[var(--gold-light)]"
-      >
-        <MessageCircle size={22} />
-      </a>
+      {/* AI CONCIERGE */}
+      <ConciergeWidgetLoader />
     </main>
   );
 }
