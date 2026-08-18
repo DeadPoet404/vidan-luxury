@@ -8,169 +8,21 @@ import {
   MapPin,
 } from "lucide-react";
 import { useState } from "react";
+import {
+  RESIDENCE_AREAS,
+  RESIDENCES,
+  type Residence,
+} from "@/lib/residences";
 
 const filters = [
   "All",
-  "East Legon",
-  "Cantonments",
-  "Spintex",
-  "Adenta",
+  ...RESIDENCE_AREAS,
 ] as const;
 
 type ResidenceFilter = (typeof filters)[number];
 
-const residences = [
-  {
-    name: "Beautiful One-Bedroom",
-    location: "East Legon",
-    area: "East Legon",
-    type: "1 Bedroom · Furnished",
-    priceUsd: "$130",
-    priceGhs: "≈ GH₵1,430",
-    amenities: [
-      "En-suite bedroom",
-      "High-speed Wi-Fi",
-      "Smart TV & DSTV",
-    ],
-    image:
-      "/images/vidan/01-east-legon-one-bedroom/01.webp",
-  },
-  {
-    name: "Affordable Two-Bedroom",
-    location: "East Legon",
-    area: "East Legon",
-    type: "2 Bedrooms · Serviced",
-    priceUsd: "≈ $214",
-    priceGhs: "GH₵2,350",
-    amenities: [
-      "All rooms en-suite",
-      "Equipped kitchen",
-      "24/7 security",
-    ],
-    image:
-      "/images/vidan/02-east-legon-two-bedroom/01.webp",
-  },
-  {
-    name: "Furnished One-Bedroom",
-    location: "Cantonments",
-    area: "Cantonments",
-    type: "1 Bedroom · Furnished",
-    priceUsd: "$120",
-    priceGhs: "≈ GH₵1,320",
-    amenities: [
-      "Backup power",
-      "High-speed Wi-Fi",
-      "Secure parking",
-    ],
-    image:
-      "/images/vidan/03-cantonments-one-bedroom/01.webp",
-  },
-  {
-    name: "Spintex Two-Bedroom",
-    location: "Spintex",
-    area: "Spintex",
-    type: "2 Bedrooms · Furnished",
-    priceUsd: "$85",
-    priceGhs: "≈ GH₵935",
-    amenities: [
-      "Unlimited internet",
-      "Weekly cleaning",
-      "Washing machine",
-    ],
-    image:
-      "/images/vidan/04-spintex-two-bedroom-85/01.webp",
-  },
-  {
-    name: "Spintex City Apartment",
-    location: "Spintex",
-    area: "Spintex",
-    type: "2 Bedrooms · Furnished",
-    priceUsd: "$75",
-    priceGhs: "≈ GH₵825",
-    amenities: [
-      "Unlimited Wi-Fi",
-      "Weekly cleaning",
-      "Prime location",
-    ],
-    image:
-      "/images/vidan/05-spintex-two-bedroom-75/01.webp",
-  },
-  {
-    name: "Premium One-Bedroom Suite",
-    location: "Ashaley Botwe",
-    area: "Adenta",
-    type: "1 Bedroom · Premium Suite",
-    priceUsd: "≈ $180",
-    priceGhs: "GH₵1,980",
-    amenities: [
-      "En-suite bedroom",
-      "Wi-Fi & DSTV",
-      "24/7 security",
-    ],
-    image:
-      "/images/vidan/06-ashaley-botwe-premium-suite/03.webp",
-  },
-  {
-    name: "Modern Two-Bedroom",
-    location: "Ashaley Botwe",
-    area: "Adenta",
-    type: "2 Bedrooms · Furnished",
-    priceUsd: "≈ $158",
-    priceGhs: "GH₵1,740",
-    amenities: [
-      "Fitted kitchen",
-      "Reliable utilities",
-      "Secure parking",
-    ],
-    image:
-      "/images/vidan/07-ashaley-botwe-modern-two-bedroom/01.webp",
-  },
-  {
-    name: "Classy Two-Bedroom",
-    location: "Pantang Junction",
-    area: "Adenta",
-    type: "2 Bedrooms · Serviced",
-    priceUsd: "$140",
-    priceGhs: "≈ GH₵1,540",
-    amenities: [
-      "Two en-suite rooms",
-      "Wi-Fi & DSTV",
-      "Constant utilities",
-    ],
-    image:
-      "/images/vidan/08-pantang-classy-two-bedroom/01.webp",
-  },
-  {
-    name: "Serene Three-Bedroom",
-    location: "Pantang Junction",
-    area: "Adenta",
-    type: "3 Bedrooms · Serviced",
-    priceUsd: "$150",
-    priceGhs: "≈ GH₵1,650",
-    amenities: [
-      "All rooms en-suite",
-      "Fitted kitchen",
-      "Wi-Fi & DSTV",
-    ],
-    image:
-      "/images/vidan/09-pantang-three-bedroom/01.webp",
-  },
-  {
-    name: "Classic Studio Apartment",
-    location: "Ashaley Botwe",
-    area: "Adenta",
-    type: "Studio · Furnished",
-    priceUsd: "≈ $104",
-    priceGhs: "GH₵1,140",
-    amenities: [
-      "Fitted kitchen",
-      "24/7 security",
-      "Secure parking",
-    ],
-    image:
-      "/images/vidan/10-ashaley-botwe-classic-studio/01.webp",
-  },
-];
+const residences: Residence[] = RESIDENCES;
+
 
 const portfolioFacts = [
   {

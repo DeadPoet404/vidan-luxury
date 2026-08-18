@@ -6,63 +6,22 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useState } from "react";
+import {
+  ANY_RESIDENCE_OPTION,
+  RESIDENCES,
+} from "@/lib/residences";
 
-const residences = [
+const residenceOptions = [
   {
-    value: "Any available residence",
-    label: "Any available residence",
-    rate: "Best available direct rate",
+    value: ANY_RESIDENCE_OPTION.value,
+    label: ANY_RESIDENCE_OPTION.label,
+    rate: ANY_RESIDENCE_OPTION.rate,
   },
-  {
-    value: "Beautiful One-Bedroom — East Legon",
-    label: "Beautiful One-Bedroom — East Legon",
-    rate: "$130 / approximately GH₵1,430 per night",
-  },
-  {
-    value: "Affordable Two-Bedroom — East Legon",
-    label: "Affordable Two-Bedroom — East Legon",
-    rate: "GH₵2,350 / approximately $214 per night",
-  },
-  {
-    value: "Furnished One-Bedroom — Cantonments",
-    label: "Furnished One-Bedroom — Cantonments",
-    rate: "$120 / approximately GH₵1,320 per night",
-  },
-  {
-    value: "Two-Bedroom Furnished Apartment — Spintex",
-    label: "Two-Bedroom Furnished Apartment — Spintex",
-    rate: "$85 / approximately GH₵935 per night",
-  },
-  {
-    value: "Spintex City Apartment",
-    label: "Spintex City Apartment",
-    rate: "$75 / approximately GH₵825 per night",
-  },
-  {
-    value: "Premium One-Bedroom Suite — Ashaley Botwe",
-    label: "Premium One-Bedroom Suite — Ashaley Botwe",
-    rate: "GH₵1,980 / approximately $180 per night",
-  },
-  {
-    value: "Modern Two-Bedroom — Ashaley Botwe",
-    label: "Modern Two-Bedroom — Ashaley Botwe",
-    rate: "GH₵1,740 / approximately $158 per night",
-  },
-  {
-    value: "Classy Two-Bedroom — Pantang Junction",
-    label: "Classy Two-Bedroom — Pantang Junction",
-    rate: "$140 / approximately GH₵1,540 per night",
-  },
-  {
-    value: "Serene Three-Bedroom — Pantang Junction",
-    label: "Serene Three-Bedroom — Pantang Junction",
-    rate: "$150 / approximately GH₵1,650 per night",
-  },
-  {
-    value: "Classic Studio — Ashaley Botwe",
-    label: "Classic Studio — Ashaley Botwe",
-    rate: "GH₵1,140 / approximately $104 per night",
-  },
+  ...RESIDENCES.map((home) => ({
+    value: home.bookingLabel,
+    label: home.bookingLabel,
+    rate: home.rateSummary,
+  })),
 ];
 
 const guestOptions = [
@@ -153,9 +112,9 @@ export default function BookingForm() {
   );
 
   const selectedResidence =
-    residences.find(
+    residenceOptions.find(
       (item) => item.value === residence,
-    ) ?? residences[0];
+    ) ?? residenceOptions[0];
 
   const minimumDeparture = arrival
     ? getNextDate(arrival)
@@ -399,7 +358,7 @@ export default function BookingForm() {
               }
               className={`${inputClassName} appearance-none`}
             >
-              {residences.map((item) => (
+              {residenceOptions.map((item) => (
                 <option
                   key={item.value}
                   value={item.value}
