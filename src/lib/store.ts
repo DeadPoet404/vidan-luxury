@@ -22,6 +22,9 @@ const STORE_DIR = path.join(process.cwd(), "data");
 const STORE_PATH = path.join(STORE_DIR, "store.json");
 const TMP_PATH = path.join(STORE_DIR, "store.json.tmp");
 const BACKUP_PATH = path.join(STORE_DIR, "store.backup.json");
+const LOCK_PATH = path.join(STORE_DIR, "store.lock");
+const LOCK_STALE_MS = 15_000;
+const LOCK_TIMEOUT_MS = 10_000;
 
 const AUDIT_CAP = 500;
 
@@ -222,10 +225,66 @@ async function loadStore(): Promise<StoreFile> {
 /** Serialize all mutations so check-then-block is atomic in-process. */
 let queue: Promise<unknown> = Promise.resolve();
 
+const sleep = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Advisory cross-process lock (O_EXCL lockfile). The Next server and the
+ * Telegram bot are separate OS processes sharing data/store.json; this
+ * serializes their load → mutate → persist spans so neither can lose the
+ * other's update. Stale locks (crashed holder) self-heal after 15s.
+ */
+async function acquireLock(): Promise<void> {
+  const start = Date.now();
+  for (;;) {
+    try {
+      await fs.mkdir(STORE_DIR, { recursive: true });
+      const handle = await fs.open(LOCK_PATH, "wx");
+      try {
+        await handle.writeFile(
+          JSON.stringify({ pid: process.pid, at: new Date().toISOString() }),
+        );
+      } finally {
+        await handle.close();
+      }
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (code !== "EEXIST") throw error;
+      try {
+        const stat = await fs.stat(LOCK_PATH);
+        if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
+          await fs.unlink(LOCK_PATH).catch(() => undefined); // stale: break it
+          continue;
+        }
+      } catch {
+        continue; // lock vanished between checks — retry at once
+      }
+      if (Date.now() - start > LOCK_TIMEOUT_MS) {
+        throw new Error("Timed out waiting for the store lock");
+      }
+      await sleep(40);
+    }
+  }
+}
+
+async function releaseLock(): Promise<void> {
+  await fs.unlink(LOCK_PATH).catch(() => undefined);
+}
+
 export function withStore<T>(
   fn: (store: StoreFile) => T | Promise<T>,
 ): Promise<T> {
-  const run = queue.then(() => loadStore()).then(fn);
+  const run = queue.then(async () => {
+    await acquireLock();
+    try {
+      cache = null; // another process may have written since our last read
+      const store = await loadStore();
+      return await fn(store);
+    } finally {
+      await releaseLock();
+    }
+  });
   queue = run.catch(() => undefined);
   return run;
 }
@@ -312,7 +371,49 @@ export type BlockOptions = {
   actor: string;
 };
 
-/** Block a range. Caller must run checkAvailability first (same queue turn). */
+/** Shared write path — must be called inside a withStore turn. */
+async function pushBlock(
+  store: StoreFile,
+  roomId: string,
+  from: string,
+  to: string,
+  source: BlockSource,
+  opts: BlockOptions,
+): Promise<OccupiedRange | null> {
+  const room = store.rooms[roomId];
+  if (!room) return null;
+
+  const status =
+    opts.status ?? (source === "chat" ? "reserved" : "confirmed");
+  const holdHours = opts.holdHours ?? DEFAULT_HOLD_HOURS;
+  const now = new Date();
+
+  const entry: OccupiedRange = {
+    ref: makeRef(store),
+    from,
+    to,
+    source,
+    status,
+    createdAt: now.toISOString(),
+    expiresAt:
+      status === "reserved"
+        ? new Date(now.getTime() + holdHours * 3_600_000).toISOString()
+        : null,
+    guest: opts.guest,
+  };
+
+  room.occupied.push(entry);
+  audit(
+    store,
+    opts.actor,
+    "block",
+    `${entry.ref} ${roomId} ${from}→${to} (${status}, ${source})`,
+  );
+  await persist(store);
+  return entry;
+}
+
+/** Block a range unchecked (self-tests / forced ops). Prefer tryBlockRange. */
 export async function blockRange(
   roomId: string,
   from: string,
@@ -320,38 +421,56 @@ export async function blockRange(
   source: BlockSource,
   opts: BlockOptions,
 ): Promise<OccupiedRange | null> {
+  return withStore((store) =>
+    pushBlock(store, roomId, from, to, source, opts),
+  );
+}
+
+/**
+ * Atomic verify-then-block: checkAvailability and the write share one
+ * store turn (in-process queue + cross-process lock), so two writers can
+ * never both succeed on overlapping ranges. This is the gate every real
+ * booking path must use.
+ */
+export async function tryBlockRange(
+  roomId: string,
+  from: string,
+  to: string,
+  source: BlockSource,
+  opts: BlockOptions,
+): Promise<
+  | { ok: true; entry: OccupiedRange }
+  | { ok: false; result: Extract<AvailabilityResult, { ok: false }> }
+> {
   return withStore(async (store) => {
     const room = store.rooms[roomId];
-    if (!room) return null;
+    const result = checkAvailability(room ?? undefined, from, to);
+    if (!result.ok) return { ok: false, result };
+    const entry = await pushBlock(store, roomId, from, to, source, opts);
+    if (!entry) {
+      return { ok: false, result: { ok: false, reason: "unknown-room" } };
+    }
+    return { ok: true, entry };
+  });
+}
 
-    const status =
-      opts.status ?? (source === "chat" ? "reserved" : "confirmed");
-    const holdHours = opts.holdHours ?? DEFAULT_HOLD_HOURS;
-    const now = new Date();
-
-    const entry: OccupiedRange = {
-      ref: makeRef(store),
-      from,
-      to,
-      source,
-      status,
-      createdAt: now.toISOString(),
-      expiresAt:
-        status === "reserved"
-          ? new Date(now.getTime() + holdHours * 3_600_000).toISOString()
-          : null,
-      guest: opts.guest,
-    };
-
-    room.occupied.push(entry);
-    audit(
-      store,
-      opts.actor,
-      "block",
-      `${entry.ref} ${roomId} ${from}→${to} (${status}, ${source})`,
-    );
-    await persist(store);
-    return entry;
+/** Confirm a live hold: reserved → confirmed, expiry cleared. */
+export async function confirmRange(
+  ref: string,
+  actor: string,
+): Promise<boolean> {
+  return withStore(async (store) => {
+    for (const room of Object.values(store.rooms)) {
+      const hit = room.occupied.find((o) => o.ref === ref);
+      if (hit && hit.status === "reserved") {
+        hit.status = "confirmed";
+        hit.expiresAt = null;
+        audit(store, actor, "confirm", `${ref} in ${room.id}`);
+        await persist(store);
+        return true;
+      }
+    }
+    return false;
   });
 }
 
