@@ -1,5 +1,6 @@
 // GET /api/availability — public (PII-free) availability board.
-//   ?room=<id>&from=YYYY-MM-DD&to=YYYY-MM-DD  -> live check for one range
+//   ?room=<id>&from=YYYY-MM-DD&to=YYYY-MM-DD  -> live check for one range;
+//     conflict echoes are PII-safe (guest name/phone never leave the server)
 // POST /api/availability (dev-only) — engine self-test; returns pass/fail.
 
 import { NextResponse } from "next/server";
@@ -12,8 +13,22 @@ import {
   releaseRange,
   updateRoom,
 } from "@/lib/store";
+import type { OccupiedRange } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
+
+/** Public echo of a conflicting range — strips guest PII (name/phone). */
+function publicConflict(c: OccupiedRange): Omit<OccupiedRange, "guest"> {
+  return {
+    ref: c.ref,
+    from: c.from,
+    to: c.to,
+    source: c.source,
+    status: c.status,
+    createdAt: c.createdAt,
+    expiresAt: c.expiresAt,
+  };
+}
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -24,7 +39,11 @@ export async function GET(request: Request) {
   if (room && from && to) {
     const state = await getRoom(room);
     const result = checkAvailability(state ?? undefined, from, to);
-    return NextResponse.json({ room, from, to, ...result });
+    const safe =
+      !result.ok && result.conflict
+        ? { ...result, conflict: publicConflict(result.conflict) }
+        : result;
+    return NextResponse.json({ room, from, to, ...safe });
   }
 
   const board = await boardSnapshot(false);
@@ -52,12 +71,20 @@ export async function POST() {
     );
     push("free window is available", r1.ok === true && r1.nights === 4);
 
-    // 2. block part of it and see the overlap rejected
+    // 2. block part of it (with guest PII) and see the overlap rejected
     const entry = await blockRange(roomId, "2035-01-02", "2035-01-04", "selftest", {
       actor: "selftest",
+      guest: { name: "Selftest Guest", phone: "+233200000000" },
     });
     push("block created with ref", !!entry?.ref, entry?.ref);
     const ref = entry?.ref ?? "";
+
+    // 2b. public conflict echo never leaks guest PII
+    const echo = entry ? publicConflict(entry) : null;
+    push(
+      "conflict echo strips guest PII",
+      !!echo && echo.ref === ref && !("guest" in echo),
+    );
 
     const r2 = checkAvailability(
       (await getRoom(roomId)) ?? undefined,
