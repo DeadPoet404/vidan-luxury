@@ -1,0 +1,445 @@
+// ─────────────────────────────────────────────────────────────
+// Vidan AI Concierge — shared contract + Gemini helpers +
+// scripted fallback (demo works even without an API key).
+// Used by: src/app/api/chat/route.ts (server only)
+// ─────────────────────────────────────────────────────────────
+
+import { RESIDENCES } from "@/lib/residences";
+
+export type ChatRole = "user" | "model";
+
+export interface ChatMessage {
+  role: ChatRole;
+  content: string;
+}
+
+export interface ConciergeBooking {
+  guestName: string | null;
+  phone: string | null;
+  residence: string | null;
+  arrival: string | null;   // YYYY-MM-DD
+  departure: string | null; // YYYY-MM-DD
+  guests: string | null;
+  purpose: string | null;
+  requests: string | null;
+}
+
+export const EMPTY_BOOKING: ConciergeBooking = {
+  guestName: null,
+  phone: null,
+  residence: null,
+  arrival: null,
+  departure: null,
+  guests: null,
+  purpose: null,
+  requests: null,
+};
+
+export interface ConciergeResponse {
+  reply: string;
+  suggestions: string[];
+  booking: ConciergeBooking;
+  bookingComplete: boolean;
+  source: "gemini" | "fallback";
+  note?: string;
+  /** Present once a Telegram alert attempt was made for this booking */
+  alertSent?: boolean;
+  alertNote?: string;
+}
+
+// Fields that must be present before we alert the team.
+const REQUIRED_FIELDS: (keyof ConciergeBooking)[] = [
+  "guestName",
+  "phone",
+  "residence",
+  "arrival",
+  "departure",
+  "guests",
+];
+
+export function isBookingComplete(b: ConciergeBooking): boolean {
+  return REQUIRED_FIELDS.every((k) => !!b[k] && b[k]!.trim().length > 0);
+}
+
+// ── Gemini response schema (structured JSON output) ──────────
+
+export const RESPONSE_SCHEMA = {
+  type: "OBJECT",
+  properties: {
+    reply: {
+      type: "STRING",
+      description:
+        "Concierge reply to the guest, warm and concise (max ~80 words).",
+    },
+    suggestions: {
+      type: "ARRAY",
+      description: "2-4 short follow-up quick replies the guest might tap.",
+      items: { type: "STRING" },
+    },
+    booking: {
+      type: "OBJECT",
+      description:
+        "Everything known so far about the booking enquiry, accumulated across the whole conversation.",
+      properties: {
+        guestName: { type: "STRING", nullable: true },
+        phone: { type: "STRING", nullable: true },
+        residence: {
+          type: "STRING",
+          nullable: true,
+          description:
+            "The exact residence label from the portfolio list, or 'Any available residence'.",
+        },
+        arrival: {
+          type: "STRING",
+          nullable: true,
+          description: "YYYY-MM-DD",
+        },
+        departure: {
+          type: "STRING",
+          nullable: true,
+          description: "YYYY-MM-DD",
+        },
+        guests: { type: "STRING", nullable: true },
+        purpose: { type: "STRING", nullable: true },
+        requests: { type: "STRING", nullable: true },
+      },
+      propertyOrdering: [
+        "guestName",
+        "phone",
+        "residence",
+        "arrival",
+        "departure",
+        "guests",
+        "purpose",
+        "requests",
+      ],
+    },
+  },
+  required: ["reply", "suggestions", "booking"],
+  propertyOrdering: ["reply", "suggestions", "booking"],
+} as const;
+
+// ── System prompt built from the single source of truth ──────
+
+function portfolioLines(): string {
+  return RESIDENCES.map(
+    (r, i) =>
+      `${String(i + 1).padStart(2, "0")}. "${r.bookingLabel}" — ${r.type}, ` +
+      `sleeps ${r.sleeps}, amenities: ${r.amenities.join(", ")}. ` +
+      `Indicative rate: ${r.rateSummary}.`,
+  ).join("\n");
+}
+
+export function buildSystemPrompt(): string {
+  return [
+    "You are the Vidan Concierge, the AI booking assistant for Vidan Luxury Apartments, a portfolio of furnished short-let residences in Accra, Ghana (East Legon, Cantonments, Spintex, Ashaley Botwe and Pantang).",
+    "",
+    "PORTFOLIO (the only residences that exist — never invent others):",
+    portfolioLines(),
+    "",
+    "YOUR GOAL: guide the guest from enquiry to a complete booking request. Collect, step by step (never more than one question per reply):",
+    "1) guest full name, 2) WhatsApp phone number, 3) preferred residence (or 'Any available residence'), 4) arrival date, 5) departure date, 6) number of guests. Purpose and special requests are nice-to-have.",
+    "",
+    "RULES:",
+    "- Rates are indicative starting prices per night; final rates are always confirmed by the Vidan team. Never quote a total price as final — you may estimate (nights x nightly rate) but label it 'indicative'.",
+    "- Availability is live with the team; always say the team will confirm exact availability.",
+    "- Never share exact street addresses or payment links. Never ask for card details.",
+    "- December in Accra is peak season ('Detty December') — encourage early confirmation.",
+    "- Keep replies warm, polished and concise (max ~80 words). Short sentences. No emojis.",
+    "- Dates must be normalised to YYYY-MM-DD in the booking fields.",
+    "- The booking object you return must reflect EVERYTHING known so far in the conversation, not just the latest message.",
+    "- Suggestions are 2-4 short next actions the guest could tap (e.g. 'See two-bedroom options').",
+    "- If the guest goes off-topic, answer briefly and steer back to their stay.",
+    "- When every required booking field is known, summarise the stay and say the Vidan team will confirm on WhatsApp shortly.",
+  ].join("\n");
+}
+
+// ── Coercion: sanitize whatever the model returns ───────────
+
+function str(v: unknown, max = 120): string | null {
+  if (typeof v !== "string") return null;
+  const t = v.trim().slice(0, max);
+  return t.length ? t : null;
+}
+
+export function coerceBooking(input: unknown): ConciergeBooking {
+  const o = (input ?? {}) as Record<string, unknown>;
+  return {
+    guestName: str(o.guestName, 80),
+    phone: str(o.phone, 30),
+    residence: str(o.residence, 90),
+    arrival: str(o.arrival, 10),
+    departure: str(o.departure, 10),
+    guests: str(o.guests, 10),
+    purpose: str(o.purpose, 40),
+    requests: str(o.requests, 240),
+  };
+}
+
+export function coerceResponse(
+  input: unknown,
+  source: ConciergeResponse["source"],
+): ConciergeResponse {
+  const o = (input ?? {}) as Record<string, unknown>;
+  const rawSuggestions = Array.isArray(o.suggestions) ? o.suggestions : [];
+  const suggestions = rawSuggestions
+    .map((s) => str(s, 60))
+    .filter((s): s is string => !!s)
+    .slice(0, 4);
+  const booking = coerceBooking(o.booking);
+  return {
+    reply: str(o.reply, 900) ?? "…",
+    suggestions,
+    booking,
+    bookingComplete: isBookingComplete(booking),
+    source,
+  };
+}
+
+export function withNote(r: ConciergeResponse, note: string): ConciergeResponse {
+  return { ...r, note };
+}
+
+// ── Telegram booking alerts ──────────────────────────────────
+
+export function nightsBetween(
+  arrival: string | null,
+  departure: string | null,
+): number | null {
+  if (!arrival || !departure) return null;
+  const a = Date.parse(`${arrival}T00:00:00Z`);
+  const d = Date.parse(`${departure}T00:00:00Z`);
+  if (Number.isNaN(a) || Number.isNaN(d)) return null;
+  const nights = Math.round((d - a) / 86_400_000);
+  return nights > 0 ? nights : null;
+}
+
+function rateForResidence(label: string | null): string | null {
+  if (!label) return null;
+  const hit = RESIDENCES.find(
+    (r) => r.bookingLabel === label || r.name === label,
+  );
+  return hit ? hit.rateSummary : null;
+}
+
+export function formatAlertText(
+  b: ConciergeBooking,
+  source: string,
+): string {
+  const nights = nightsBetween(b.arrival, b.departure);
+  const rate = rateForResidence(b.residence);
+  const when = new Date().toLocaleString("en-GB", {
+    timeZone: "Africa/Accra",
+  });
+
+  return [
+    "NEW BOOKING REQUEST — Vidan Concierge (demo)",
+    "",
+    `Guest: ${b.guestName ?? "—"}`,
+    `WhatsApp: ${b.phone ?? "—"}`,
+    `Residence: ${b.residence ?? "—"}`,
+    `Dates: ${b.arrival ?? "?"} to ${b.departure ?? "?"}${
+      nights ? ` (${nights} night${nights === 1 ? "" : "s"})` : ""
+    }`,
+    `Guests: ${b.guests ?? "—"}`,
+    `Purpose: ${b.purpose ?? "—"}`,
+    `Requests: ${b.requests ?? "—"}`,
+    `Indicative rate: ${rate ?? "best available direct rate"}`,
+    `Assistant: ${source}`,
+    `Received: ${when} (Accra)`,
+    "",
+    "Demo alert — confirm availability and the final rate with the guest on WhatsApp before payment.",
+  ].join("\n");
+}
+
+export async function sendTelegramAlert(
+  text: string,
+): Promise<{ ok: boolean; error?: string }> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!token || !chatId) {
+    return {
+      ok: false,
+      error: "TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not configured",
+    };
+  }
+
+  try {
+    const res = await fetch(
+      `https://api.telegram.org/bot${token}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text,
+          disable_web_page_preview: true,
+        }),
+        signal: AbortSignal.timeout(15_000),
+        cache: "no-store",
+      },
+    );
+
+    if (!res.ok) {
+      return { ok: false, error: `Telegram HTTP ${res.status}` };
+    }
+
+    const data = (await res.json()) as {
+      ok?: boolean;
+      description?: string;
+    };
+    return data.ok
+      ? { ok: true }
+      : { ok: false, error: data.description ?? "unknown Telegram error" };
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "network error",
+    };
+  }
+}
+
+// ── Scripted fallback (no API key / Gemini unavailable) ─────
+
+const MONTHS: Record<string, string> = {
+  january: "01", february: "02", march: "03", april: "04",
+  may: "05", june: "06", july: "07", august: "08",
+  september: "09", october: "10", november: "11", december: "12",
+};
+
+function extractDates(text: string, b: ConciergeBooking) {
+  const iso = text.match(/\b(20\d{2})-(\d{2})-(\d{2})\b/g);
+  if (iso && iso.length >= 1 && !b.arrival) b.arrival = iso[0];
+  if (iso && iso.length >= 2 && !b.departure) b.departure = iso[1];
+
+  if (!b.arrival || !b.departure) {
+    const monthName =
+      /\b(\d{1,2})(?:st|nd|rd|th)?\s+(january|february|march|april|may|june|july|august|september|october|november|december)\s*(20\d{2})?/gi;
+    const found: string[] = [];
+    let m: RegExpExecArray | null;
+    while ((m = monthName.exec(text)) !== null) {
+      const year = m[3] ?? "2026";
+      found.push(
+        `${year}-${MONTHS[m[2].toLowerCase()]}-${m[1].padStart(2, "0")}`,
+      );
+    }
+    if (!b.arrival && found[0]) b.arrival = found[0];
+    if (!b.departure && found[1]) b.departure = found[1];
+  }
+}
+
+function extractResidence(
+  text: string,
+  b: ConciergeBooking,
+): string | null {
+  if (b.residence) return b.residence;
+  const lower = text.toLowerCase();
+  let best: { label: string; score: number } | null = null;
+  for (const r of RESIDENCES) {
+    const tokens = [
+      ...r.location.toLowerCase().split(/\s+/),
+      ...r.name
+        .toLowerCase()
+        .split(/[\s-]+/)
+        .filter((t) => t.length > 4),
+      r.id.includes("studio") ? "studio" : "",
+    ];
+    const score = tokens.reduce(
+      (n, t) => (t && lower.includes(t) ? n + 1 : n),
+      0,
+    );
+    if (score > (best?.score ?? 0)) {
+      best = { label: r.bookingLabel, score };
+    }
+  }
+  return best ? best.label : null;
+}
+
+function extractBooking(messages: ChatMessage[]): ConciergeBooking {
+  const text = messages
+    .filter((m) => m.role === "user")
+    .map((m) => m.content)
+    .join("\n");
+  const b = { ...EMPTY_BOOKING };
+
+  const name = text.match(/my name is ([A-Za-z][A-Za-z .'-]{1,40})/i);
+  if (name) b.guestName = name[1].trim();
+
+  const phone = text.match(/(\+\d[\d\s-]{7,16}\d|\b0\d{2}[\s-]?\d{3}[\s-]?\d{4}\b)/);
+  if (phone) b.phone = phone[1].replace(/\s+/g, " ").trim();
+
+  extractDates(text, b);
+  b.residence = extractResidence(text, b);
+
+  const guests = text.match(/(\d{1,2})\s*(?:guests|people|persons|of us)\b/i);
+  if (guests) b.guests = guests[1];
+
+  const purpose = text.match(
+    /\b(business|leisure|holiday|vacation|relocat\w*|extended(?:\s+stay)?)\b/i,
+  );
+  if (purpose) {
+    const p = purpose[1].toLowerCase();
+    b.purpose = p.startsWith("business")
+      ? "Business"
+      : p.startsWith("relocat")
+        ? "Relocation"
+        : p.startsWith("extended")
+          ? "Extended stay"
+          : "Leisure";
+  }
+
+  return b;
+}
+
+const FALLBACK_SUGGESTIONS = [
+  "See the residences",
+  "What are the rates?",
+  "Check December availability",
+];
+
+export function fallbackConcierge(messages: ChatMessage[]): ConciergeResponse {
+  const booking = extractBooking(messages);
+  const last = messages[messages.length - 1]?.content.toLowerCase() ?? "";
+  let reply: string;
+
+  const missing = REQUIRED_FIELDS.filter((k) => !booking[k]);
+
+  if (isBookingComplete(booking)) {
+    reply =
+      `Thank you, ${booking.guestName} — that is everything I need. ` +
+      `${booking.residence}, ${booking.arrival} to ${booking.departure}, ` +
+      `${booking.guests} guest(s). The Vidan team will confirm availability and your final rate on WhatsApp shortly.`;
+  } else if (messages.length <= 1 && /^(hi|hello|hey|good)/.test(last)) {
+    reply =
+      "Welcome to Vidan Luxury Apartments. I can help you find and book a furnished residence in Accra — East Legon, Cantonments, Spintex, Ashaley Botwe or Pantang. What dates are you considering?";
+  } else {
+    const next = missing[0];
+    const prompts: Record<string, string> = {
+      guestName: "May I have your full name for the reservation?",
+      phone: "Could you share a WhatsApp number the team can reach you on?",
+      residence:
+        "Do you have a preferred residence, or should we match the best available option for your dates?",
+      arrival: "What is your arrival date?",
+      departure: "And your departure date?",
+      guests: "How many guests will be staying?",
+    };
+    const known: string[] = [];
+    if (booking.guestName) known.push(`thank you, ${booking.guestName}`);
+    if (booking.residence) known.push(`noted ${booking.residence}`);
+    if (booking.arrival) known.push(`arrival ${booking.arrival}`);
+    if (booking.departure) known.push(`departure ${booking.departure}`);
+    reply =
+      (known.length ? `Noted — ${known.join(", ")}. ` : "") +
+      prompts[next] +
+      " (Demo mode: scripted assistant — configure GEMINI_API_KEY for full AI answers.)";
+  }
+
+  return {
+    reply,
+    suggestions: FALLBACK_SUGGESTIONS,
+    booking,
+    bookingComplete: isBookingComplete(booking),
+    source: "fallback",
+  };
+}
