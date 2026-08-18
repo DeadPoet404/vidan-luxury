@@ -5,6 +5,7 @@
 // ─────────────────────────────────────────────────────────────
 
 import { RESIDENCES } from "@/lib/residences";
+import { addDaysISO, type PublicRoomSnapshot } from "@/lib/store";
 
 export type ChatRole = "user" | "model";
 
@@ -42,6 +43,8 @@ export interface ConciergeResponse {
   bookingComplete: boolean;
   source: "gemini" | "fallback";
   note?: string;
+  /** Server-side booking ref once inventory is locked (e.g. "VX-4F2A") */
+  bookingRef?: string | null;
   /** Present once a Telegram alert attempt was made for this booking */
   alertSent?: boolean;
   alertNote?: string;
@@ -130,19 +133,66 @@ function portfolioLines(): string {
   ).join("\n");
 }
 
-export function buildSystemPrompt(): string {
+function availabilityLines(board: PublicRoomSnapshot[]): string {
+  const lines: string[] = [];
+  for (const room of board) {
+    if (room.paused) continue; // paused rooms are invisible to the AI
+    const extras: string[] = [];
+    if (room.minNights > 1) extras.push(`min ${room.minNights} nights`);
+    if (room.rateNote) extras.push(`rate note: ${room.rateNote}`);
+    if (room.note) extras.push(`note: ${room.note}`);
+    const suffix = extras.length ? ` (${extras.join("; ")})` : "";
+    const sorted = [...room.occupied].sort((a, b) =>
+      a.from.localeCompare(b.from),
+    );
+    if (sorted.length === 0) {
+      lines.push(`- "${room.name}": FREE — no current blocks${suffix}.`);
+      continue;
+    }
+    const ranges = sorted
+      .map((o) => `[${o.from} → ${addDaysISO(o.to, room.turnoverBufferDays)})`)
+      .join(", ");
+    lines.push(
+      `- "${room.name}": BLOCKED ${ranges}; all other dates free${suffix}.`,
+    );
+  }
+  return lines.join("\n");
+}
+
+function availabilitySection(board: PublicRoomSnapshot[] | undefined): string[] {
+  if (!board) {
+    return [
+      "",
+      "LIVE AVAILABILITY: the availability board could not be loaded right now — be honest that the team will confirm exact dates before anything is locked.",
+    ];
+  }
+  return [
+    "",
+    "LIVE AVAILABILITY BOARD (authoritative snapshot, refreshed for every message):",
+    availabilityLines(board),
+    "",
+    "AVAILABILITY RULES:",
+    "- BLOCKED ranges are nights already taken, written [arrival → departure). If the guest's stay overlaps one even partially, those dates are NOT available: apologise briefly, name the conflict, and offer different dates or a FREE residence. Never promise, pencil in or 'request' blocked dates.",
+    "- Back-to-back stays are allowed: arriving on the exact day a blocked range ends, or departing on the day one begins, is fine.",
+    "- Residences absent from the board are paused and not offered: never recommend or mention them; if the guest asks for one by name, say it is currently unavailable and steer them to the listed ones.",
+    "- When dates are FREE you may sound confident: the system locks those dates the moment the booking completes.",
+  ];
+}
+
+export function buildSystemPrompt(board?: PublicRoomSnapshot[]): string {
   return [
     "You are the Vidan Concierge, the AI booking assistant for Vidan Luxury Apartments, a portfolio of furnished short-let residences in Accra, Ghana (East Legon, Cantonments, Spintex, Ashaley Botwe and Pantang).",
     "",
     "PORTFOLIO (the only residences that exist — never invent others):",
     portfolioLines(),
+    ...availabilitySection(board),
     "",
     "YOUR GOAL: guide the guest from enquiry to a complete booking request. Collect, step by step (never more than one question per reply):",
     "1) guest full name, 2) WhatsApp phone number, 3) preferred residence (or 'Any available residence'), 4) arrival date, 5) departure date, 6) number of guests. Purpose and special requests are nice-to-have.",
     "",
     "RULES:",
     "- Rates are indicative starting prices per night; final rates are always confirmed by the Vidan team. Never quote a total price as final — you may estimate (nights x nightly rate) but label it 'indicative'.",
-    "- Availability is live with the team; always say the team will confirm exact availability.",
+    "- The live availability board above is authoritative: it decides what is bookable, not you. Final rates are still confirmed by the team on WhatsApp.",
     "- Never share exact street addresses or payment links. Never ask for card details.",
     "- December in Accra is peak season ('Detty December') — encourage early confirmation.",
     "- Keep replies warm, polished and concise (max ~80 words). Short sentences. No emojis.",
@@ -150,8 +200,33 @@ export function buildSystemPrompt(): string {
     "- The booking object you return must reflect EVERYTHING known so far in the conversation, not just the latest message.",
     "- Suggestions are 2-4 short next actions the guest could tap (e.g. 'See two-bedroom options').",
     "- If the guest goes off-topic, answer briefly and steer back to their stay.",
-    "- When every required booking field is known, summarise the stay and say the Vidan team will confirm on WhatsApp shortly.",
+    "- When every required booking field is known AND the availability rules above allow it, summarise the stay and say the dates will be locked instantly and the Vidan team will confirm on WhatsApp shortly. If the rules do not allow it, do not complete the booking — offer alternatives instead.",
   ].join("\n");
+}
+
+/** Map whatever label the model produced to an actual residence id. */
+export function resolveResidenceId(label: string | null): string | null {
+  if (!label) return null;
+  const needle = label.trim().toLowerCase();
+  for (const r of RESIDENCES) {
+    if (
+      r.id === needle ||
+      r.bookingLabel.toLowerCase() === needle ||
+      r.name.toLowerCase() === needle
+    ) {
+      return r.id;
+    }
+  }
+  for (const r of RESIDENCES) {
+    if (
+      needle.includes(r.bookingLabel.toLowerCase()) ||
+      r.bookingLabel.toLowerCase().includes(needle) ||
+      needle.includes(r.name.toLowerCase())
+    ) {
+      return r.id;
+    }
+  }
+  return null;
 }
 
 // ── Coercion: sanitize whatever the model returns ───────────
@@ -222,18 +297,37 @@ function rateForResidence(label: string | null): string | null {
   return hit ? hit.rateSummary : null;
 }
 
+export type AlertExtras = {
+  ref?: string | null;
+  status?: string; // "confirmed" (instant) | "reserved" (timed hold)
+  holdHours?: number;
+};
+
 export function formatAlertText(
   b: ConciergeBooking,
   source: string,
+  extras: AlertExtras = {},
 ): string {
   const nights = nightsBetween(b.arrival, b.departure);
   const rate = rateForResidence(b.residence);
   const when = new Date().toLocaleString("en-GB", {
     timeZone: "Africa/Accra",
   });
+  const locked = Boolean(extras.ref);
 
   return [
-    "NEW BOOKING REQUEST — Vidan Concierge (demo)",
+    locked
+      ? `✅ BOOKING LOCKED — dates already blocked in the live system`
+      : "NEW BOOKING REQUEST — Vidan Concierge (demo)",
+    ...(locked
+      ? [
+          `Ref: ${extras.ref} · ${extras.status ?? "confirmed"}${
+            extras.status === "reserved" && extras.holdHours
+              ? ` (auto-expires in ${extras.holdHours}h unless confirmed)`
+              : ""
+          }`,
+        ]
+      : []),
     "",
     `Guest: ${b.guestName ?? "—"}`,
     `WhatsApp: ${b.phone ?? "—"}`,
@@ -248,12 +342,17 @@ export function formatAlertText(
     `Assistant: ${source}`,
     `Received: ${when} (Accra)`,
     "",
-    "Demo alert — confirm availability and the final rate with the guest on WhatsApp before payment.",
+    locked
+      ? "The guest was told the dates are locked. Tap 🗑 Release only if this booking should be undone."
+      : "Demo alert — confirm availability and the final rate with the guest on WhatsApp before payment.",
   ].join("\n");
 }
 
+export type AlertButton = { text: string; callback_data: string };
+
 export async function sendTelegramAlert(
   text: string,
+  buttons?: AlertButton[][],
 ): Promise<{ ok: boolean; error?: string }> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -279,6 +378,9 @@ export async function sendTelegramAlert(
             chat_id: chatId,
             text,
             disable_web_page_preview: true,
+            ...(buttons && buttons.length
+              ? { reply_markup: { inline_keyboard: buttons } }
+              : {}),
           }),
           signal: AbortSignal.timeout(15_000),
           cache: "no-store",
@@ -382,7 +484,9 @@ function extractBooking(messages: ChatMessage[]): ConciergeBooking {
     .join("\n");
   const b = { ...EMPTY_BOOKING };
 
-  const name = text.match(/my name is ([A-Za-z][A-Za-z .'-]{1,40})/i);
+  const name = text.match(
+    /my name is ([A-Za-z][A-Za-z'-]*(?: +[A-Za-z][A-Za-z'-]*){0,3})/i,
+  );
   if (name) b.guestName = name[1].trim();
 
   const phone = text.match(/(\+\d[\d\s-]{7,16}\d|\b0\d{2}[\s-]?\d{3}[\s-]?\d{4}\b)/);
@@ -391,7 +495,7 @@ function extractBooking(messages: ChatMessage[]): ConciergeBooking {
   extractDates(text, b);
   b.residence = extractResidence(text, b);
 
-  const guests = text.match(/(\d{1,2})\s*(?:guests|people|persons|of us)\b/i);
+  const guests = text.match(/(\d{1,2})\s*(?:guests?|people|persons|of us)\b/i);
   if (guests) b.guests = guests[1];
 
   const purpose = text.match(
