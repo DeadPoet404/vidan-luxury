@@ -44,3 +44,6 @@ next-env.d.ts
 
 # keep the env template tracked (secrets stay ignored)
 !.env.example
+
+# runtime availability store (contains guest PII)
+data/
